@@ -493,7 +493,7 @@ main,footer{position:relative}
   -webkit-mask-image:radial-gradient(circle at var(--ox,50%) var(--oy,50%),transparent var(--r,0px),#000 calc(var(--r,0px) + .5px));
           mask-image:radial-gradient(circle at var(--ox,50%) var(--oy,50%),transparent var(--r,0px),#000 calc(var(--r,0px) + .5px))}
 .ld-name{display:flex;flex-wrap:wrap;justify-content:center;column-gap:.32em;font-family:var(--display);text-transform:uppercase;font-size:clamp(40px,9vw,150px);line-height:.9;letter-spacing:.01em;padding:0 var(--g);text-align:center}
-.ld-w{display:inline-flex;align-items:flex-end;overflow:hidden;padding-bottom:.06em}
+.ld-w{display:inline-flex;align-items:flex-end;overflow:hidden;padding-bottom:.06em;padding-right:.12em;margin-right:-.12em} /* room so the dot isn't clipped */
 .ld-c{display:inline-block;transform:translateY(105%);opacity:0;transition:transform .65s cubic-bezier(.2,.8,.2,1),opacity .65s cubic-bezier(.2,.8,.2,1);transition-delay:calc(.3s + var(--i) * .035s)}
 .ld-dot{display:inline-block;width:.2em;height:.2em;border-radius:50%;background:var(--accent);margin:0 0 .04em .08em;transform:scale(0);transition:transform .5s cubic-bezier(.3,1.6,.5,1);transition-delay:calc(.45s + var(--i) * .035s)}
 .loader.go .ld-c{transform:none;opacity:1}
