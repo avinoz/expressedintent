@@ -481,15 +481,25 @@ main,footer{position:relative}
   .hs-icon,.hs-phone{transform:none}
 }
 .hs-web{aspect-ratio:1024/582}
+
+/* ---------- intro: wordmark rises, then a circle opens from the dot (after avinoz.com) ---------- */
+.loader{position:fixed;inset:0;z-index:200;display:grid;place-items:center;background:var(--night);color:var(--night-ink);transform:none;transition:none;
+  -webkit-mask-image:radial-gradient(circle at var(--ox,50%) var(--oy,50%),transparent var(--r,0px),#000 calc(var(--r,0px) + .5px));
+          mask-image:radial-gradient(circle at var(--ox,50%) var(--oy,50%),transparent var(--r,0px),#000 calc(var(--r,0px) + .5px))}
+.ld-name{display:flex;flex-wrap:wrap;justify-content:center;column-gap:.32em;font-family:var(--display);text-transform:uppercase;font-size:clamp(40px,9vw,150px);line-height:.9;letter-spacing:.01em;padding:0 var(--g);text-align:center}
+.ld-w{display:inline-flex;align-items:flex-end;overflow:hidden;padding-bottom:.06em}
+.ld-c{display:inline-block;transform:translateY(105%);opacity:0;transition:transform .65s cubic-bezier(.2,.8,.2,1),opacity .65s cubic-bezier(.2,.8,.2,1);transition-delay:calc(.3s + var(--i) * .035s)}
+.ld-dot{display:inline-block;width:.2em;height:.2em;border-radius:50%;background:var(--accent);margin:0 0 .04em .08em;transform:scale(0);transition:transform .5s cubic-bezier(.3,1.6,.5,1);transition-delay:calc(.45s + var(--i) * .035s)}
+.loader.go .ld-c{transform:none;opacity:1}
+.loader.go .ld-dot{transform:none}
+.loader.out .ld-name{opacity:0;transition:opacity .6s ease}
+.loader.out .ld-dot{opacity:0;transition:opacity .2s ease}
 </style>
 </head>
 <body>
 
 <div class="loader" id="loader" aria-hidden="true">
-  <div class="loader-inner">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10.5" fill="none" stroke="currentColor" stroke-width="1"/><rect x="6.5" y="6.5" width="11" height="11" fill="currentColor"/></svg>
-    <span class="loader-count" id="loader-count">000</span>
-  </div>
+  <div class="ld-name"><span class="ld-w"><span class="ld-c" style="--i:0">E</span><span class="ld-c" style="--i:1">x</span><span class="ld-c" style="--i:2">p</span><span class="ld-c" style="--i:3">r</span><span class="ld-c" style="--i:4">e</span><span class="ld-c" style="--i:5">s</span><span class="ld-c" style="--i:6">s</span><span class="ld-c" style="--i:7">e</span><span class="ld-c" style="--i:8">d</span></span><span class="ld-w"><span class="ld-c" style="--i:9">I</span><span class="ld-c" style="--i:10">n</span><span class="ld-c" style="--i:11">t</span><span class="ld-c" style="--i:12">e</span><span class="ld-c" style="--i:13">n</span><span class="ld-c" style="--i:14">t</span><i class="ld-dot" id="ld-dot" style="--i:15"></i></span></div>
 </div>
 
 <div class="cursor" id="cursor" aria-hidden="true"><span id="cursor-label">View</span></div>
@@ -759,17 +769,32 @@ const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
 $('#yr').textContent = new Date().getFullYear();
 
-/* ---- preloader ---- */
-const loader = $('#loader'), count = $('#loader-count');
-function finishLoad(){ loader.classList.add('done'); document.body.classList.add('loaded'); setTimeout(()=>loader.remove(), 1100); }
-if (reduced) finishLoad();
+/* ---- intro: letters rise, then the page opens from the dot ---- */
+const loader = $('#loader');
+function finishLoad(){ document.body.classList.add('loaded'); loader && loader.remove(); document.documentElement.style.overflow=''; }
+if (reduced || !loader) finishLoad();
 else {
-  const t0 = performance.now(), dur = 1300;
-  (function tick(now){
-    const p = Math.min(1,(now - t0)/dur);
-    count.textContent = String(Math.round(p*100)).padStart(3,'0');
-    p < 1 ? requestAnimationFrame(tick) : setTimeout(finishLoad, 150);
-  })(t0);
+  document.documentElement.style.overflow = 'hidden';
+  const dot = $('#ld-dot');
+  const ease = t => t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;   // easeInOutCubic
+  function open(){
+    const d = dot.getBoundingClientRect(), x = d.left + d.width/2, y = d.top + d.height/2;
+    const R = Math.max(Math.hypot(x, y), Math.hypot(innerWidth - x, y), Math.hypot(x, innerHeight - y), Math.hypot(innerWidth - x, innerHeight - y));
+    loader.style.setProperty('--ox', x + 'px'); loader.style.setProperty('--oy', y + 'px');
+    loader.classList.add('out');
+    const t0 = performance.now(), dur = 850;
+    (function grow(now){
+      const p = Math.min(1, (now - t0) / dur);
+      loader.style.setProperty('--r', (ease(p) * R).toFixed(1) + 'px');
+      p < 1 ? requestAnimationFrame(grow) : finishLoad();
+    })(t0);
+  }
+  const start = () => requestAnimationFrame(() => {
+    loader.classList.add('go');
+    const n = loader.querySelectorAll('.ld-c').length;
+    setTimeout(open, 300 + n * 35 + 650 + 450);   // letters in, short hold, then open
+  });
+  (document.fonts ? Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 1500))]) : Promise.resolve()).then(start);
 }
 
 /* ---- split headings into lines-of-words ---- */
