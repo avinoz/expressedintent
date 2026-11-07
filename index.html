@@ -644,6 +644,11 @@ html{font-synthesis:none}
 .snav-labels a:hover,.snav-labels a:focus-visible,.snav-labels a[aria-current]{color:var(--sn-ink)}
 @media(max-width:900px){.snav{display:none}}
 @media(prefers-reduced-motion:reduce){.snav-labels a{translate:0 0}}
+
+/* ---------- card sections (why + process): inset rounded card that flips up on scroll ---------- */
+section.card-sec{background:none;border:0;padding:clamp(16px,2.4vw,40px) calc(var(--g) * .5)}
+section.card-sec>.wrap{max-width:calc(var(--max) - var(--g));background:var(--band);border-radius:clamp(22px,2.4vw,36px);padding:clamp(56px,7vw,112px) clamp(22px,5vw,88px);transform-origin:50% 100%;will-change:transform;box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 60px -40px rgba(10,20,18,.45)}
+@media(max-width:760px){section.card-sec{padding:10px 10px}section.card-sec>.wrap{padding:44px 20px;border-radius:22px}}
 </style>
 </head>
 <body>
@@ -696,7 +701,7 @@ html{font-synthesis:none}
   </section>
 
   <!-- MANIFESTO -->
-  <section class="manifesto band" id="why"><div class="wrap">
+  <section class="manifesto band card-sec" id="why"><div class="wrap">
     <span class="label">(01) — Why we exist</span>
     <p id="manifesto">Every great build starts by <span class="acc">listening.</span> We tune into your challenges and user needs, finding the right solution before bringing designers, engineers, and AI together to <span class="acc">make it real.</span></p>
   </div></section>
@@ -788,7 +793,7 @@ html{font-synthesis:none}
   </div>
 
   <!-- PROCESS -->
-  <section class="process band" id="process">
+  <section class="process band card-sec" id="process">
     <div class="wrap">
       <div class="sh">
         <h2 class="split">Clarity first. <em>Then speed.</em></h2>
@@ -1154,6 +1159,23 @@ $$('.pin').forEach(sec => {
     labels.forEach((a,k) => k === cur ? a.setAttribute('aria-current','location') : a.removeAttribute('aria-current'));
     const on = scrollY > innerHeight * .2;
     nav.classList.toggle('on', on); on ? nav.removeAttribute('inert') : nav.setAttribute('inert','');
+  };
+  const req = () => { if (!raf) raf = requestAnimationFrame(update); };
+  addEventListener('scroll', req, {passive:true}); addEventListener('resize', req); update();
+})();
+
+// card sections flip up: tilted back at the bottom of the screen, flat by ~20% from the top (as trajectory.ai #platform)
+(() => {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const cards = [...document.querySelectorAll('section.card-sec')].map(sec => [sec, sec.querySelector('.wrap')]);
+  let raf = 0;
+  const update = () => {
+    raf = 0; const vh = innerHeight;
+    cards.forEach(([sec, c]) => {
+      const top = sec.getBoundingClientRect().top + parseFloat(getComputedStyle(sec).paddingTop);
+      const p = Math.min(1, Math.max(0, (vh - top) / (vh * .79))), q = 1 - p;
+      c.style.transform = p >= 1 ? 'none' : `perspective(1800px) translateY(${(10*q).toFixed(3)}%) scale(${(.88 + .12*p).toFixed(4)}) rotateX(${(26*q).toFixed(3)}deg)`;
+    });
   };
   const req = () => { if (!raf) raf = requestAnimationFrame(update); };
   addEventListener('scroll', req, {passive:true}); addEventListener('resize', req); update();
