@@ -552,6 +552,12 @@ html{font-synthesis:none}
 /* project names stay on one line */
 .hs-col h3{white-space:nowrap;font-size:clamp(32px,3.6vw,60px)}
 @media(max-width:900px){.hs-col h3{font-size:clamp(26px,8.4vw,40px)}}
+/* studio: copy + stats left, heading right with a divider */
+@media(min-width:901px){
+  .studio .wrap{grid-template-columns:1.1fr 1fr;align-items:stretch;column-gap:0}
+  .studio .wrap>div:first-child{order:2;border-left:1px solid var(--line);padding-left:clamp(32px,5vw,100px);display:flex;flex-direction:column;justify-content:flex-end}
+  .studio .wrap>div:last-child{order:1;padding-right:clamp(32px,5vw,90px);align-self:center}
+}
 </style>
 </head>
 <body>
