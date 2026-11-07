@@ -558,6 +558,26 @@ html{font-synthesis:none}
   .studio .wrap>div:first-child{order:2;border-left:1px solid var(--line);padding-left:clamp(32px,5vw,100px);display:flex;flex-direction:column;justify-content:flex-end}
   .studio .wrap>div:last-child{order:1;padding-right:clamp(32px,5vw,90px);align-self:center}
 }
+/* ---------- phone spacing fixes ---------- */
+@media(max-width:900px){
+  /* experience: one column, no empty art column */
+  .exp .pin-grid{grid-template-columns:1fr;row-gap:14px}
+  .exp .pin-art{display:none}
+  .exp .pin-head h2{margin-top:8px}
+  .exp .pstep-head{gap:12px;align-items:baseline}
+  .exp .pstep-when{white-space:nowrap}
+  .exp .pstep-body p{padding-left:32px}
+  /* work row: clear the header, line sits below it */
+  .hs-track{height:calc(100svh - 176px);margin-top:88px}
+  .hs-progress{top:80px}
+  .hs-tiles--web .hs-web{top:0;transform:none}
+  .hs-col.in .hs-tiles--web .hs-web{transform:none}
+}
+@media(max-width:600px){
+  /* footer links line up with the left edge like everything else */
+  .f-links{align-items:flex-start}
+  .f-top>div{width:100%}
+}
 </style>
 </head>
 <body>
