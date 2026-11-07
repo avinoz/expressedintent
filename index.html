@@ -578,6 +578,26 @@ html{font-synthesis:none}
   .f-links{align-items:flex-start}
   .f-top>div{width:100%}
 }
+/* ---------- phones: tighter experience list + 2x2 process ---------- */
+@media(max-width:900px){
+  .exp .pin-view{padding-top:0}
+  .exp.pin{padding:clamp(48px,12vw,64px) 0}
+  .exp .pin-head h2{font-size:clamp(30px,8.6vw,40px);line-height:1.05}
+  .exp .pin-intro{font-size:15px;margin-bottom:8px}
+  .exp .pstep-head{padding:12px 0 6px}
+  .exp .pstep-title{font-size:20px}
+  .exp .pstep-when{font-size:11px}
+  .exp .pstep-body p{font-size:14px;line-height:1.45;padding:0 0 12px 32px;color:var(--ink-2)}
+  .exp .pstep-head .label:first-child{width:20px}
+
+  .process{padding:48px 0}
+  .process .sh{margin-bottom:22px}
+  .steps{grid-template-columns:1fr 1fr;gap:22px 16px}
+  .step{padding-top:14px}
+  .step h3{font-size:26px;margin:6px 0 6px}
+  .step p{font-size:13.5px;line-height:1.45;max-width:none}
+  .step .label{font-size:11px}
+}
 </style>
 </head>
 <body>
