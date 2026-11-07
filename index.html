@@ -623,6 +623,8 @@ html{font-synthesis:none}
 }
 /* hero headline: original sizes, taller window so descenders (p, h) aren't clipped */
 .cycle-xl{height:1.9em;line-height:1.9;align-items:baseline;padding:0 .25em 0 0}
+.cycle-xl .caps{position:relative;top:-.22em} /* lift WE toward the word */
+@media(min-width:981px){.hero-main{padding-left:clamp(32px,4.5vw,96px)}}
 </style>
 </head>
 <body>
@@ -665,11 +667,9 @@ html{font-synthesis:none}
           <g clip-path="url(#clip)"><path id="blob" fill="currentColor"/></g>
           <rect id="caret" x="298" y="250" width="10" height="56" fill="var(--accent)"/>
         </svg>
-        <div class="mark-cap"><span data-p="0" class="on">Listen</span><span data-p="1">Shape</span><span data-p="2">Build</span></div>
       </div>
     </div>
 
-    <div class="hero-foot"><span></span><div class="scroll-hint label"><i></i>Scroll</div></div>
   </section>
 
   <!-- MANIFESTO -->
