@@ -600,6 +600,8 @@ html{font-synthesis:none}
 }
 /* phones: experience title matches the other section headings */
 @media(max-width:900px){.exp .pin-head h2{font-size:clamp(46px,12vw,60px);font-size-adjust:.5;line-height:.95}}
+/* desktop: experience title at heading scale */
+@media(min-width:901px){.exp .pin-head h2{font-size-adjust:.5;font-size:clamp(44px,5.3vw,96px);line-height:1}}
 </style>
 </head>
 <body>
@@ -780,7 +782,7 @@ html{font-synthesis:none}
           <p class="pin-intro rv">Our team's experience designing and engineering complex systems.</p>
           <ol class="psteps">
             <li class="pstep" data-i="0" data-active>
-              <button type="button" class="pstep-head" data-jump="0"><span class="label">01</span><span class="pstep-title">NVIDIA</span><span class="label pstep-when">Contract</span></button>
+              <button type="button" class="pstep-head" data-jump="0"><span class="label">01</span><span class="pstep-title">NVIDIA</span><span class="label pstep-when">2025 — 2026</span></button>
               <div class="pstep-body"><div><p>Contract design &amp; engineering — designed and built software for managing NVIDIA's data centers.</p><i class="pstep-bar"></i></div></div>
             </li>
             <li class="pstep" data-i="1">
@@ -802,7 +804,7 @@ html{font-synthesis:none}
           </ol>
         </div>
         <div class="pin-art" aria-hidden="true">
-            <figure class="ppanel" data-i="0" data-active><span class="label">Contract</span><span class="pname">NVIDIA</span><span class="pword">data-center software.</span></figure>
+            <figure class="ppanel" data-i="0" data-active><span class="label">2025 — 2026</span><span class="pname">NVIDIA</span><span class="pword">data-center software.</span></figure>
             <figure class="ppanel has-img"None><div class="pimg"><img src="https://avinoz.com/assets/images/projects/sequitur.png" alt="AmmoniaPro touchscreen device and its testing workflow screens, designed for Sequitur Health" loading="lazy"></div><figcaption><span class="pcap-name">Sequitur</span><span class="pword">clinical diagnostics.</span><span class="label">2024 — 2026</span></figcaption></figure>
             <figure class="ppanel has-img"None><div class="pimg"><img src="https://avinoz.com/assets/images/projects/kilo.png" alt="Kilo gym management scheduling screen" loading="lazy"></div><figcaption><span class="pcap-name">Kilo</span><span class="pword">gym management SaaS.</span><span class="label">2022 — 2025</span></figcaption></figure>
             <figure class="ppanel has-img"None><div class="pimg"><img src="https://avinoz.com/assets/images/projects/nebulon.png" alt="Nebulon cloud infrastructure dashboard showing server and drive details" loading="lazy"></div><figcaption><span class="pcap-name">Nebulon</span><span class="pword">enterprise cloud.</span><span class="label">2019 — 2022</span></figcaption></figure>
@@ -834,28 +836,9 @@ html{font-synthesis:none}
     </div>
   </section>
 
-  <!-- CONTACT -->
-  <section class="contact" id="contact">
-    <div class="wrap">
-      <div>
-        <span class="label">(03) — Start a project</span>
-        <h2 class="split">What do you <em>mean</em> to make?</h2>
-        <p class="rv">Tell us in a sentence. We'll come back with how we'd build it, a timeline and a price.</p>
-        <a class="pill rv" href="mailto:hello@expressedintent.com?subject=Project%20inquiry%20%E2%80%94%20Expressed%20Intent">Email the studio →</a>
-      </div>
-      <div class="divider" aria-hidden="true"></div>
-      <form id="form" class="rv" novalidate>
-        <span class="label">Or send a message</span>
-        <div class="field"><input id="f-name" name="name" placeholder=" " autocomplete="name"><label for="f-name">Your name</label></div>
-        <div class="field"><input id="f-email" name="email" type="email" placeholder=" " autocomplete="email"><label for="f-email">Email</label></div>
-        <div class="field"><textarea id="f-msg" name="message" rows="4" placeholder=" "></textarea><label for="f-msg">What do you mean to make?</label></div>
-        <button class="pill" type="submit">Send →</button>
-      </form>
-    </div>
-  </section>
 </main>
 
-<footer>
+<footer id="contact">
   <div class="wrap">
     <div class="f-top">
       <h3>Work with us</h3>
@@ -1054,7 +1037,7 @@ if (reduced){ drawMark(5800); rows.forEach(r=>{ r.el.style.transform = r.dir>0 ?
 else requestAnimationFrame(loop);
 
 /* ---- form -> email ---- */
-$('#form').addEventListener('submit', e => {
+$('#form') && $('#form').addEventListener('submit', e => {
   e.preventDefault();
   const name = $('#f-name').value.trim(), email = $('#f-email').value.trim(), msg = $('#f-msg').value.trim();
   const body = `${msg}\n\n— ${name}${email ? ' (' + email + ')' : ''}`;
