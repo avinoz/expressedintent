@@ -667,6 +667,29 @@ section.card-sec>.wrap{max-width:calc(var(--max) - var(--g));background:var(--ba
 .work.hs.hs-free .hs-intro,.work.hs.hs-free .hs-col{scroll-snap-align:start}
 .work.hs.hs-free .hs-track{scroll-padding-inline:var(--g)}
 .work.hs.hs-free .hs-hint-d{display:none}.work.hs.hs-free .hs-hint-m{display:inline}
+
+/* ================= color pass: rhythm of light / dark blocks + one warm accent ================= */
+:root{--warm:#f08a5d;--cream:#f3efe2;--deep:#1b2a28}
+/* hero: warm sun glow behind the mark */
+.hero-v2 .mark-wrap::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:50%;background:radial-gradient(circle at 45% 42%,color-mix(in srgb,var(--cream) 62%,transparent) 0%,color-mix(in srgb,var(--cream) 26%,transparent) 50%,transparent 66%);animation:sunpulse 9s ease-in-out infinite}
+.hero-v2 .mark-wrap::after{content:"";position:absolute;width:7%;aspect-ratio:1;border-radius:50%;background:var(--warm);right:9%;top:13%;box-shadow:0 0 0 8px color-mix(in srgb,var(--warm) 22%,transparent);animation:sunpulse 6s ease-in-out infinite}
+@keyframes sunpulse{50%{transform:scale(1.04);opacity:.8}}
+.hero .cycle-xl .caps{color:var(--deep)}
+/* why: cream paper card */
+#why>.wrap{--ink:#14211f;--ink-2:#45564f;--ink-3:#71807b;--line:rgba(20,33,31,.14);--accent:#286273;background:var(--cream);color:var(--ink);box-shadow:0 40px 80px -50px rgba(10,20,18,.55)}
+#why>.wrap .label::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--warm);margin-right:10px;vertical-align:1px}
+/* process: deep night card */
+#process>.wrap{--ink:#f3efe2;--ink-2:#b7c6c1;--ink-3:#8ea29d;--line:rgba(243,239,226,.16);--accent:#7cc4d6;background:var(--deep);color:var(--ink);box-shadow:0 40px 80px -40px rgba(10,20,18,.7)}
+#process>.wrap .step:nth-child(1) h3{color:#f3efe2}
+#process>.wrap .step h3::after{content:"";display:block;width:28px;height:3px;border-radius:2px;background:var(--warm);margin-top:12px}
+/* warm touches */
+.svc-row .arr{color:var(--warm)}
+.svc:hover .arr{color:var(--accent-ink)}
+.stats b{color:var(--deep)}
+.stats b::after{content:"";display:block;width:22px;height:3px;border-radius:2px;background:var(--warm);margin-top:10px}
+.mq-row.b span b{color:var(--deep)}
+.snav-dots span{background:var(--deep)}
+@media (prefers-reduced-motion:reduce){.hero-v2 .mark-wrap::before,.hero-v2 .mark-wrap::after{animation:none}}
 </style>
 </head>
 <body>
