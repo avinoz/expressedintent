@@ -626,6 +626,18 @@ html{font-synthesis:none}
 .cycle-xl .caps{position:relative;top:-.22em} /* lift WE toward the word */
 .cycle-xl{margin-bottom:-.4em} /* tighten space above the paragraph */
 @media(min-width:981px){.hero-main{padding-left:clamp(32px,4.5vw,96px)}}
+
+/* ---------- side section nav (desktop) ---------- */
+.snav{position:fixed;right:clamp(14px,1.6vw,28px);top:50%;transform:translateY(-50%);z-index:60;display:flex;align-items:center;gap:14px}
+.snav-labels{display:flex;flex-direction:column;align-items:flex-end;gap:8px;opacity:0;transform:translateX(8px);pointer-events:none;transition:opacity .35s var(--ease),transform .45s var(--ease)}
+.snav:hover .snav-labels,.snav.show .snav-labels,.snav:focus-within .snav-labels{opacity:1;transform:none;pointer-events:auto}
+.snav-labels a{font-size:14px;line-height:1;padding:9px 14px;border-radius:999px;background:color-mix(in srgb,var(--pill-bg,#fff) 88%,transparent);color:color-mix(in srgb,var(--pill-ink,#111) 55%,transparent);border:1px solid color-mix(in srgb,var(--pill-ink,#111) 10%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);box-shadow:0 6px 18px -10px rgba(10,20,18,.35);transition:color .25s,background .25s}
+.snav-labels a:hover,.snav-labels a.on{color:var(--pill-ink,#111);background:var(--pill-bg,#fff)}
+.snav-track{display:flex;flex-direction:column;align-items:center;gap:10px;padding:12px 7px;border-radius:999px;background:color-mix(in srgb,var(--pill-bg,#fff) 88%,transparent);border:1px solid color-mix(in srgb,var(--pill-ink,#111) 10%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);box-shadow:0 6px 18px -10px rgba(10,20,18,.35)}
+.snav-track a{display:block;width:8px;height:8px;border-radius:999px;background:color-mix(in srgb,var(--pill-ink,#111) 28%,transparent);transition:height .45s var(--ease),background .3s}
+.snav-track a:hover{background:color-mix(in srgb,var(--pill-ink,#111) 55%,transparent)}
+.snav-track a.on{height:26px;background:var(--pill-ink,#111)}
+@media(max-width:900px){.snav{display:none}}
 </style>
 </head>
 <body>
@@ -647,6 +659,10 @@ html{font-synthesis:none}
   </div>
 </header>
 
+<nav class="snav" aria-label="Sections">
+  <div class="snav-labels"><a href="#top" data-s="0">Intro</a><a href="#why" data-s="1">Why</a><a href="#work" data-s="2">Work</a><a href="#services" data-s="3">Services</a><a href="#process" data-s="4">Process</a><a href="#experience" data-s="5">Experience</a><a href="#studio" data-s="6">Studio</a></div>
+  <div class="snav-track"><a href="#top" data-s="0" aria-label="Intro"></a><a href="#why" data-s="1" aria-label="Why"></a><a href="#work" data-s="2" aria-label="Work"></a><a href="#services" data-s="3" aria-label="Services"></a><a href="#process" data-s="4" aria-label="Process"></a><a href="#experience" data-s="5" aria-label="Experience"></a><a href="#studio" data-s="6" aria-label="Studio"></a></div>
+</nav>
 <main id="top">
 
   <!-- HERO -->
@@ -674,7 +690,7 @@ html{font-synthesis:none}
   </section>
 
   <!-- MANIFESTO -->
-  <section class="manifesto band"><div class="wrap">
+  <section class="manifesto band" id="why"><div class="wrap">
     <span class="label">(01) — Why we exist</span>
     <p id="manifesto">Every great build starts by <span class="acc">listening.</span> We tune into your challenges and user needs, finding the right solution before bringing designers, engineers, and AI together to <span class="acc">make it real.</span></p>
   </div></section>
@@ -1112,6 +1128,21 @@ $$('.pin').forEach(sec => {
   addEventListener('load', size);
   size();
 })();
+})();
+
+// side section nav: highlight the section crossing mid-screen; show labels while scrolling
+(() => {
+  const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+  const nav = $('.snav'); if (!nav) return;
+  const secs = ['.hero','#why','#work','#services','#process','#experience','#studio'].map(q => $(q));
+  const links = $$('.snav a'); let t;
+  const update = () => {
+    const mid = innerHeight * .5; let cur = 0;
+    secs.forEach((el,i) => { if (el && el.getBoundingClientRect().top <= mid) cur = i; });
+    links.forEach(a => a.classList.toggle('on', +a.dataset.s === cur));
+  };
+  addEventListener('scroll', () => { update(); nav.classList.add('show'); clearTimeout(t); t = setTimeout(() => nav.classList.remove('show'), 1200); }, {passive:true});
+  addEventListener('resize', update); update();
 })();
 </script>
 </body>
