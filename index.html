@@ -627,17 +627,23 @@ html{font-synthesis:none}
 .cycle-xl{margin-bottom:-.4em} /* tighten space above the paragraph */
 @media(min-width:981px){.hero-main{padding-left:clamp(32px,4.5vw,96px)}}
 
-/* ---------- side section nav (desktop) ---------- */
-.snav{position:fixed;right:clamp(14px,1.6vw,28px);top:50%;transform:translateY(-50%);z-index:60;display:flex;align-items:center;gap:14px}
-.snav-labels{display:flex;flex-direction:column;align-items:flex-end;gap:8px;opacity:0;transform:translateX(8px);pointer-events:none;transition:opacity .35s var(--ease),transform .45s var(--ease)}
-.snav:hover .snav-labels,.snav.show .snav-labels,.snav:focus-within .snav-labels{opacity:1;transform:none;pointer-events:auto}
-.snav-labels a{font-size:14px;line-height:1;padding:9px 14px;border-radius:999px;background:color-mix(in srgb,var(--pill-bg,#fff) 88%,transparent);color:color-mix(in srgb,var(--pill-ink,#111) 55%,transparent);border:1px solid color-mix(in srgb,var(--pill-ink,#111) 10%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);box-shadow:0 6px 18px -10px rgba(10,20,18,.35);transition:color .25s,background .25s}
-.snav-labels a:hover,.snav-labels a.on{color:var(--pill-ink,#111);background:var(--pill-bg,#fff)}
-.snav-track{display:flex;flex-direction:column;align-items:center;gap:10px;padding:12px 7px;border-radius:999px;background:color-mix(in srgb,var(--pill-bg,#fff) 88%,transparent);border:1px solid color-mix(in srgb,var(--pill-ink,#111) 10%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);box-shadow:0 6px 18px -10px rgba(10,20,18,.35)}
-.snav-track a{display:block;width:8px;height:8px;border-radius:999px;background:color-mix(in srgb,var(--pill-ink,#111) 28%,transparent);transition:height .45s var(--ease),background .3s}
-.snav-track a:hover{background:color-mix(in srgb,var(--pill-ink,#111) 55%,transparent)}
-.snav-track a.on{height:26px;background:var(--pill-ink,#111)}
+/* ---------- side section nav (desktop), modeled on trajectory.ai ---------- */
+.snav{--xp:cubic-bezier(.19,1,.22,1);--cb:cubic-bezier(.33,1,.68,1);--sn-bg:var(--pill-bg,#fff);--sn-ink:var(--pill-ink,#3d3e43);--sn-sh:0 0 0 1px rgba(20,21,27,.05),0 1px 2px rgba(20,21,27,.06),0 12px 32px -8px rgba(20,21,27,.16);
+  position:fixed;right:16px;top:50%;transform:translateY(-50%);z-index:60;display:flex;opacity:0;pointer-events:none;transition:opacity .8s var(--xp)}
+.snav.on{opacity:1;pointer-events:auto}
+.snav-dots{display:flex;flex-direction:column;align-items:center;gap:12px;padding:8px;border-radius:999px;background:var(--sn-bg);box-shadow:var(--sn-sh);list-style:none;margin:0}
+.snav-dots a{position:relative;display:flex}
+.snav-dots a::before{content:"";position:absolute;inset:-6px}
+.snav-dots span{display:block;width:6px;height:6px;border-radius:999px;background:var(--sn-ink);opacity:.3;scale:0;transition:scale .9s var(--xp) var(--d,0ms),transform .4s var(--xp)}
+.snav.on .snav-dots span{scale:1}
+.snav-dots a:hover span{transform:scale(1.5)}
+.snav-labels{position:absolute;top:50%;right:100%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:flex-end;gap:6px;padding-right:12px;list-style:none;margin:0;pointer-events:none}
+.snav:hover .snav-labels,.snav:focus-within .snav-labels{pointer-events:auto}
+.snav-labels a{display:block;font-family:var(--sans);font-size:13px;line-height:18px;padding:2px 10px;border-radius:999px;white-space:nowrap;background:var(--sn-bg);box-shadow:var(--sn-sh);color:color-mix(in srgb,var(--sn-ink) 70%,transparent);opacity:0;translate:4px 0;transition:opacity .4s var(--cb),translate .4s var(--cb),color .4s var(--cb);transition-delay:var(--d,0ms)}
+.snav:hover .snav-labels a,.snav:focus-within .snav-labels a{opacity:1;translate:0 0}
+.snav-labels a:hover,.snav-labels a:focus-visible,.snav-labels a[aria-current]{color:var(--sn-ink)}
 @media(max-width:900px){.snav{display:none}}
+@media(prefers-reduced-motion:reduce){.snav-labels a{translate:0 0}}
 </style>
 </head>
 <body>
@@ -660,8 +666,8 @@ html{font-synthesis:none}
 </header>
 
 <nav class="snav" aria-label="Sections">
-  <div class="snav-labels"><a href="#top" data-s="0">Intro</a><a href="#why" data-s="1">Why</a><a href="#work" data-s="2">Work</a><a href="#services" data-s="3">Services</a><a href="#process" data-s="4">Process</a><a href="#experience" data-s="5">Experience</a><a href="#studio" data-s="6">Studio</a></div>
-  <div class="snav-track"><a href="#top" data-s="0" aria-label="Intro"></a><a href="#why" data-s="1" aria-label="Why"></a><a href="#work" data-s="2" aria-label="Work"></a><a href="#services" data-s="3" aria-label="Services"></a><a href="#process" data-s="4" aria-label="Process"></a><a href="#experience" data-s="5" aria-label="Experience"></a><a href="#studio" data-s="6" aria-label="Studio"></a></div>
+  <ul class="snav-dots" aria-hidden="true"><li><a href="#why" tabindex="-1" style="--d:150ms"><span></span></a></li><li><a href="#work" tabindex="-1" style="--d:210ms"><span></span></a></li><li><a href="#services" tabindex="-1" style="--d:270ms"><span></span></a></li><li><a href="#process" tabindex="-1" style="--d:330ms"><span></span></a></li><li><a href="#experience" tabindex="-1" style="--d:390ms"><span></span></a></li><li><a href="#studio" tabindex="-1" style="--d:450ms"><span></span></a></li></ul>
+  <ul class="snav-labels"><li><a href="#why" style="--d:0ms">Why</a></li><li><a href="#work" style="--d:30ms">Work</a></li><li><a href="#services" style="--d:60ms">Services</a></li><li><a href="#process" style="--d:90ms">Process</a></li><li><a href="#experience" style="--d:120ms">Experience</a></li><li><a href="#studio" style="--d:150ms">Studio</a></li></ul>
 </nav>
 <main id="top">
 
@@ -1130,19 +1136,27 @@ $$('.pin').forEach(sec => {
 })();
 })();
 
-// side section nav: highlight the section crossing mid-screen; show labels while scrolling
+// side section nav: dots morph continuously with scroll (active = 24px, next grows as you go)
 (() => {
-  const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
-  const nav = $('.snav'); if (!nav) return;
-  const secs = ['.hero','#why','#work','#services','#process','#experience','#studio'].map(q => $(q));
-  const links = $$('.snav a'); let t;
+  const nav = document.querySelector('.snav'); if (!nav) return;
+  const ids = ['why','work','services','process','experience','studio'];
+  const secs = ids.map(id => document.getElementById(id));
+  const dots = [...nav.querySelectorAll('.snav-dots span')], labels = [...nav.querySelectorAll('.snav-labels a')];
+  let raf = 0;
   const update = () => {
-    const mid = innerHeight * .5; let cur = 0;
-    secs.forEach((el,i) => { if (el && el.getBoundingClientRect().top <= mid) cur = i; });
-    links.forEach(a => a.classList.toggle('on', +a.dataset.s === cur));
+    raf = 0;
+    const line = innerHeight * .5; let f = 0;
+    // a section is fully lit when its middle crosses mid-screen; the next one grows as you pass it
+    secs.forEach((el,i) => { if (!el) return; const r = el.getBoundingClientRect(), c = r.top + r.height / 2; if (c <= line) f = i + Math.min(1, (line - c) / Math.max(1, (secs[i+1] ? secs[i+1].getBoundingClientRect().top + secs[i+1].offsetHeight / 2 : c + r.height) - c)); });
+    f = Math.max(0, Math.min(ids.length - 1, f));
+    dots.forEach((d,k) => { const w = Math.max(0, 1 - Math.abs(f - k)); d.style.height = (6 + 18*w).toFixed(2) + 'px'; d.style.opacity = (.3 + .7*w).toFixed(3); });
+    const cur = Math.round(f);
+    labels.forEach((a,k) => k === cur ? a.setAttribute('aria-current','location') : a.removeAttribute('aria-current'));
+    const on = scrollY > innerHeight * .2;
+    nav.classList.toggle('on', on); on ? nav.removeAttribute('inert') : nav.setAttribute('inert','');
   };
-  addEventListener('scroll', () => { update(); nav.classList.add('show'); clearTimeout(t); t = setTimeout(() => nav.classList.remove('show'), 1200); }, {passive:true});
-  addEventListener('resize', update); update();
+  const req = () => { if (!raf) raf = requestAnimationFrame(update); };
+  addEventListener('scroll', req, {passive:true}); addEventListener('resize', req); update();
 })();
 </script>
 </body>
