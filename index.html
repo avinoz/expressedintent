@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Expressed Intent | We Listen.</title>
+<link rel="icon" href="images/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="images/favicon.png">
 <meta name="description" content="Expressed Intent is a small design and build studio. We find what you really mean, then direct designers, engineers and AI to build it — brand, web, iOS and complex product.">
 <meta property="og:title" content="Expressed Intent — Design & Build Studio">
 <meta property="og:description" content="We don't build what you said. We build what you meant.">
@@ -502,6 +504,14 @@ html{font-synthesis:none}
 @media(max-width:760px){.manifesto p{width:100%}}
 /* handwriting a size down in the hero + manifesto */
 .hero-title .it,.cycle-word,.manifesto p,.manifesto p .w{font-size-adjust:.33}
+/* studio: stack on tablets/phones */
+@media(max-width:900px){.studio .wrap{grid-template-columns:1fr;align-items:start;gap:28px}.studio h2{margin-bottom:0}.studio .stats{gap:14px}}
+/* work row on phones: keep the left gutter when snapping */
+.hs-hint-m{display:none}
+@media(max-width:900px),(prefers-reduced-motion:reduce){
+  .hs-track{scroll-padding-inline:var(--g)}
+  .hs-hint-d{display:none}.hs-hint-m{display:inline}
+}
 </style>
 </head>
 <body>
@@ -529,7 +539,6 @@ html{font-synthesis:none}
   <section class="hero wrap">
     <div class="hero-grid">
       <div>
-      <span class="status"><i></i>Now booking new projects</span>
       <h1 class="hero-title">
         <span class="caps">Design</span>
         <span class="caps">&amp; Build</span>
@@ -552,7 +561,6 @@ html{font-synthesis:none}
         <h2>Between what you say and what you mean.</h2>
         <p>An idea starts loose — half-said, still forming. We listen until it takes shape.</p>
         <p>Then a small team of designers and engineers directs AI to build it: precisely, quickly, and with taste.</p>
-        <a href="#contact" class="pill">Tell us what you mean →</a>
       </div>
     </div>
 
@@ -577,7 +585,7 @@ html{font-synthesis:none}
           <span class="label">Selected work</span>
           <h2 class="split">Past the brief,<br><em>to the point.</em></h2>
           <p class="rv">Each project started with one sentence about what the client really wanted. Here's what those sentences became.</p>
-          <span class="label hs-hint">Keep scrolling →</span>
+          <span class="label hs-hint"><span class="hs-hint-d">Keep scrolling →</span><span class="hs-hint-m">Swipe →</span></span>
         </div>
           <article class="hs-col">
             <div class="label hs-meta"><span>01 / Berkeley, CA</span><span>2026</span></div>
