@@ -649,6 +649,14 @@ html{font-synthesis:none}
 section.card-sec{background:none;border:0;padding:clamp(16px,2.4vw,40px) calc(var(--g) * .5)}
 section.card-sec>.wrap{max-width:calc(var(--max) - var(--g));background:var(--band);border-radius:clamp(22px,2.4vw,36px);padding:clamp(56px,7vw,112px) clamp(22px,5vw,88px);transform-origin:50% 100%;will-change:transform;box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 60px -40px rgba(10,20,18,.45)}
 @media(max-width:760px){section.card-sec{padding:10px 10px}section.card-sec>.wrap{padding:44px 20px;border-radius:22px}}
+
+/* tighter rhythm around the cards */
+@media(min-width:901px){
+  .hero{min-height:74svh;padding-bottom:0}
+  #why.card-sec{padding-top:0}
+  #process.card-sec{padding-bottom:12px}
+  .exp .pin-view{align-items:flex-start;padding-top:88px}
+}
 </style>
 </head>
 <body>
