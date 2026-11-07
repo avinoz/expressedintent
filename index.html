@@ -602,6 +602,22 @@ html{font-synthesis:none}
 @media(max-width:900px){.exp .pin-head h2{font-size:clamp(46px,12vw,60px);font-size-adjust:.5;line-height:.95}}
 /* desktop: experience title at heading scale */
 @media(min-width:901px){.exp .pin-head h2{font-size-adjust:.5;font-size:clamp(44px,5.3vw,96px);line-height:1}}
+/* ---------- hero v2: "WE build." headline left, mark right ---------- */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.hero-v2{grid-template-columns:minmax(0,1.2fr) minmax(280px,1fr);gap:clamp(32px,5vw,96px);align-items:center}
+.hero-main{display:flex;flex-direction:column;gap:clamp(20px,3vw,40px)}
+.cycle-xl{font-size:clamp(64px,9.5vw,160px);height:1.25em;line-height:1.2;overflow:hidden;padding:0 .2em 0 0;margin-left:-.02em;display:flex;align-items:center;white-space:nowrap}
+.cycle-xl .caps{font-family:var(--display);font-size:.6em;color:var(--ink-2);margin-right:.35em;letter-spacing:0}
+.cycle-xl .cycle-word{font-size-adjust:.5}
+.hero-v2 .hero-side{max-width:44ch}
+.hero-v2 .hero-side p{font-size:clamp(16px,1.25vw,19px);line-height:1.5;max-width:none;margin:0}
+.hero-v2 .mark-wrap{width:100%;max-width:560px;justify-self:end}
+.hero-foot{justify-content:space-between}
+@media(max-width:980px){
+  .hero-v2{grid-template-columns:1fr;gap:48px}
+  .cycle-xl{font-size:clamp(58px,17vw,110px)}
+  .hero-v2 .mark-wrap{justify-self:center;max-width:400px;width:84%}
+}
 </style>
 </head>
 <body>
@@ -627,13 +643,13 @@ html{font-synthesis:none}
 
   <!-- HERO -->
   <section class="hero wrap">
-    <div class="hero-grid">
-      <div>
-      <h1 class="hero-title">
-        <span class="caps">Design</span>
-        <span class="caps">&amp; Build</span>
-        <span class="it">with <em>intent.</em></span>
-      </h1>
+    <h1 class="sr-only">Expressed Intent — design &amp; build with intent</h1>
+    <div class="hero-grid hero-v2">
+      <div class="hero-main">
+        <div class="cycle cycle-xl" aria-hidden="true"><span class="caps">We</span><span class="cycle-word" id="cycle-word">listen.</span></div>
+        <div class="hero-side">
+          <p>An idea starts loose — half-spoken, still forming. We listen and use man and AI powers to build quickly to fulfill your needs with taste.</p>
+        </div>
       </div>
 
       <div class="mark-wrap" aria-hidden="true">
@@ -646,16 +662,9 @@ html{font-synthesis:none}
         </svg>
         <div class="mark-cap"><span data-p="0" class="on">Listen</span><span data-p="1">Shape</span><span data-p="2">Build</span></div>
       </div>
-
-      <div class="hero-side">
-        <p>An idea starts loose — half-spoken, still forming. We listen and use man and AI powers to build quickly to fulfill your needs with taste.</p>
-      </div>
     </div>
 
-    <div class="hero-foot">
-      <div class="cycle"><span class="caps">We</span><span class="cycle-word" id="cycle-word">listen.</span></div>
-      <div class="scroll-hint label"><i></i>Scroll</div>
-    </div>
+    <div class="hero-foot"><span></span><div class="scroll-hint label"><i></i>Scroll</div></div>
   </section>
 
   <!-- MANIFESTO -->
