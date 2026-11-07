@@ -538,6 +538,17 @@ html{font-synthesis:none}
 .split .ln{padding:.5em .35em .5em .35em;margin:-.5em -.35em -.5em -.35em}
 .split .ln>span{transform:translateY(190%)}
 .split.in .ln>span{transform:none}
+/* experience: full-width heading, bare screenshots on the right */
+.exp .pin-grid{grid-template-columns:1fr 1.15fr;row-gap:clamp(18px,2.4vw,34px);align-items:start}
+.exp .pin-head{grid-column:1/-1}
+.exp .pin-head h2{font-family:var(--serif);font-weight:500;font-size:clamp(36px,4.6vw,76px);line-height:1;letter-spacing:-.01em;margin:10px 0 0}
+.exp .pin-head h2 em{color:var(--accent)}
+.exp .pin-art{border:0;background:transparent;aspect-ratio:auto;height:min(58svh,560px);max-height:none;align-self:center}
+.exp .ppanel figcaption,.exp .pin-ticks{display:none}
+.exp .ppanel.has-img{grid-template-rows:1fr}
+.exp .pimg{padding:0}
+.exp .pimg img{border-radius:10px;box-shadow:0 30px 60px -30px rgba(10,20,18,.65)}
+@media(max-width:900px){.exp .pin-head h2{font-size:clamp(34px,9vw,48px)}}
 </style>
 </head>
 <body>
@@ -710,9 +721,11 @@ html{font-synthesis:none}
   <section class="exp pin" id="experience" style="--n:5">
     <div class="pin-view">
       <div class="wrap pin-grid">
-        <div class="pin-col">
+        <div class="pin-head">
           <span class="label">Experience</span>
           <h2 class="split">Where we've <em>done the hard stuff.</em></h2>
+        </div>
+        <div class="pin-col">
           <p class="pin-intro rv">Our team's experience designing and engineering complex systems.</p>
           <ol class="psteps">
             <li class="pstep" data-i="0" data-active>
