@@ -455,7 +455,7 @@ main,footer{position:relative}
 .hs-tags{font-size:14px;color:var(--ink-2)}
 .hs-link{display:inline-block;margin-top:10px;font-size:14px;border-bottom:1px solid currentColor;color:var(--ink)}
 .hs-link:hover{color:var(--accent)}
-@media(max-width:900px),(prefers-reduced-motion:reduce){
+@media (prefers-reduced-motion:reduce){
   .work.hs{height:auto!important;padding:clamp(56px,7vw,100px) 0}
   .hs-view{position:static;height:auto;display:block;overflow:visible}
   .hs-progress{display:none}
@@ -476,7 +476,7 @@ main,footer{position:relative}
 .hs-phone.is-empty .label{color:color-mix(in srgb,var(--night-ink) 60%,transparent)}
 .hs-phone.is-empty em{font-family:var(--serif);font-style:italic;font-weight:300;font-size:clamp(20px,1.8vw,26px);color:var(--accent);font-size-adjust:.42}
 .hs-col.in .hs-icon:hover,.hs-col.in .hs-phone:hover{transform:translateY(-6px)}
-@media(max-width:900px),(prefers-reduced-motion:reduce){
+@media (prefers-reduced-motion:reduce){
   .hs-tiles{min-height:340px}
   .hs-web,.hs-icon,.hs-phone{opacity:1}
   .hs-web{transform:translateY(-50%)}
@@ -508,9 +508,24 @@ html{font-synthesis:none}
 @media(max-width:900px){.studio .wrap{grid-template-columns:1fr;align-items:start;gap:28px}.studio h2{margin-bottom:0}.studio .stats{gap:14px}}
 /* work row on phones: keep the left gutter when snapping */
 .hs-hint-m{display:none}
-@media(max-width:900px),(prefers-reduced-motion:reduce){
+@media (prefers-reduced-motion:reduce){
   .hs-track{scroll-padding-inline:var(--g)}
   .hs-hint-d{display:none}.hs-hint-m{display:inline}
+}
+/* work row pinned on phones too: phone-sized columns */
+@media(max-width:900px){
+  .hs-track{height:calc(100svh - 140px);margin-top:48px;padding-right:var(--g)}
+  .hs-intro{width:86vw;padding-right:20px}
+  .hs-intro h2{font-size:clamp(40px,11vw,56px)}
+  .hs-col{width:84vw;padding:2px 18px 0}
+  .hs-col h3{font-size:clamp(32px,9.5vw,46px)}
+  .hs-meta{font-size:11px}
+  .hs-tiles{margin:12px 0;min-height:0}
+  .hs-icon{width:60px}
+  .hs-phone{left:76px}
+  .hs-copy{max-width:none}
+  .hs-intent{font-size:19px}
+  .hs-progress{top:66px}
 }
 </style>
 </head>
@@ -1004,7 +1019,7 @@ $$('.pin').forEach(sec => {
 (() => {
   const sec = $('.work.hs'); if (!sec) return;
   const track = $('.hs-track', sec), cols = $$('.hs-col', sec);
-  const pinned = () => matchMedia('(min-width:901px)').matches && !reduced;
+  const pinned = () => !reduced;
   let dist = 0;
   function size(){
     if (!pinned()) { sec.style.height = ''; track.style.transform = ''; cols.forEach(c => c.classList.add('in')); return; }
