@@ -480,9 +480,25 @@ main,footer{position:relative}
 .hs-phone.is-empty .label{color:color-mix(in srgb,var(--night-ink) 60%,transparent)}
 .hs-phone.is-empty em{font-family:var(--serif);font-style:italic;font-weight:300;font-size:clamp(20px,1.8vw,26px);color:var(--accent);font-size-adjust:.5;font-weight:500}
 .hs-col.in .hs-icon:hover,.hs-col.in .hs-phone:hover{transform:translateY(-6px)}
+/* store availability tiles, bottom-right of the phone */
+.hs-stores{position:absolute;right:0;bottom:5%;z-index:3;display:flex;align-items:flex-start;opacity:0;transform:translateY(24px);transition:opacity .6s var(--ease) .35s,transform .8s var(--ease) .35s}
+.hs-col.in .hs-stores{opacity:1;transform:none}
+.hs-store{--s:clamp(54px,4.6vw,70px);display:flex;flex-direction:column;align-items:center;gap:8px;text-decoration:none;position:relative}
+.hs-store+.hs-store{margin-left:calc(var(--s) * -.12);margin-top:calc(var(--s) * .5);z-index:1}
+.hs-store b{width:var(--s);aspect-ratio:1;border-radius:23%;display:grid;place-items:center;box-shadow:0 16px 30px -14px rgba(10,20,18,.55);transition:transform .4s var(--ease)}
+.hs-store svg{width:71%;height:71%}
+.hs-store--apple b{background:linear-gradient(180deg,#1ec3fb 0%,#1a74f2 100%)}
+.hs-store--apple svg{fill:none;stroke:#fff;stroke-width:1.7;stroke-linecap:round}
+.hs-store--play b{background:#15191c}
+.hs-store--play svg{width:77%;height:77%;transform:translateX(4%)}
+.hs-store span{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);white-space:nowrap}
+a.hs-store:hover b{transform:translateY(-4px)}
+@media(max-width:600px){.hs-stores{right:0;bottom:4%;flex-direction:column;align-items:center;gap:10px}.hs-store{--s:46px}.hs-store+.hs-store{margin:0;z-index:0}}
+@media(max-width:600px){.hs-tiles--app.hs-tiles--stores .hs-phone{height:auto;width:calc(100% - var(--ic) * .78 - 72px)}}
 @media (prefers-reduced-motion:reduce){
   .hs-tiles{min-height:340px}
-  .hs-web,.hs-icon,.hs-phone{opacity:1}
+  .hs-web,.hs-icon,.hs-phone,.hs-stores{opacity:1}
+  .hs-stores{transform:none}
   .hs-web{transform:translateY(-50%)}
   .hs-icon,.hs-phone{transform:none}
 }
@@ -784,7 +800,31 @@ section.card-sec>.wrap{max-width:calc(var(--max) - var(--g));background:var(--ba
             </div>
           </article>
           <article class="hs-col">
-            <div class="label hs-meta"><span>03 / iOS</span><span>App Store · In review</span></div>
+            <div class="label hs-meta"><span>03 / Mobile</span><span>App Store · Play in review</span></div>
+            <h3>Nugget Log</h3>
+            <div class="hs-tiles hs-tiles--app hs-tiles--stores"><img class="hs-icon" src="images/nuggetlog-icon.jpg?v=3" alt="Nugget Log app icon" loading="lazy"><img class="hs-phone" src="images/nuggetlog-shot.jpg" alt="Nugget Log Today screen tracking sleep, feeds and diapers" loading="lazy"><div class="hs-stores" aria-label="Available on iOS and Android">
+              <a class="hs-store hs-store--apple" href="https://apps.apple.com/us/app/nugget-log/id6800586307" target="_blank" rel="noopener" aria-label="Nugget Log on the App Store (live)"><b><svg viewBox="3 3 18 18" aria-hidden="true"><path d="M13.1 5.2 5.6 18.1M10.9 5.2l7.3 12.6M4.9 14h9.4M16.4 14h2.7"/></svg></b><span>Live</span></a>
+              <span class="hs-store hs-store--play" aria-label="Nugget Log on Google Play (in review)"><b><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M5.4 3.3 13.6 12l-8.2 8.7c-.3-.2-.4-.6-.4-1V4.3c0-.4.1-.8.4-1z"/><path fill="#34A853" d="M5.4 3.3c.3-.3.9-.4 1.4-.1l9.7 5.6-2.9 3.2z"/><path fill="#EA4335" d="M5.4 20.7c.3.3.9.4 1.4.1l9.7-5.6-2.9-3.2z"/><path fill="#FBBC04" d="m16.5 8.8 2.9 1.7c1.1.6 1.1 2.4 0 3l-2.9 1.7-2.9-3.2z"/></svg></b><span>In review</span></span>
+            </div></div>
+            <div class="hs-copy">
+              <p class="hs-intent">“Log the little moments, together.”</p>
+              <p class="hs-tags">iOS &amp; Android — live on the App Store, Google Play in review</p>
+              <a class="hs-link" href="https://apps.apple.com/us/app/nugget-log/id6800586307" target="_blank" rel="noopener">View on the App Store →</a>
+
+            </div>
+          </article>
+          <article class="hs-col">
+            <div class="label hs-meta"><span>04 / iOS</span><span>App Store · In review</span></div>
+            <h3>Pin the Reel</h3>
+            <div class="hs-tiles hs-tiles--app"><img class="hs-icon" src="images/pinthereel-icon.jpg" alt="Pin the Reel app icon" loading="lazy"><img class="hs-phone" src="images/pinthereel-shot.jpg" alt="Pin the Reel map of Lisbon with places pinned from a saved reel, sorted by category" loading="lazy"></div>
+            <div class="hs-copy">
+              <p class="hs-intent">“Turn the reels you save into places you actually go.”</p>
+              <p class="hs-tags">Product / SwiftUI &amp; MapKit / AI place extraction</p>
+
+            </div>
+          </article>
+          <article class="hs-col">
+            <div class="label hs-meta"><span>05 / iOS</span><span>App Store · In review</span></div>
             <h3>Fruithood</h3>
             <div class="hs-tiles hs-tiles--app"><img class="hs-icon" src="https://avinoz.com/assets/images/apps/fruithood.png" alt="Fruithood app icon" loading="lazy"><img class="hs-phone" src="images/fruithood-shot.jpg" alt="Fruithood map of fruit trees nearby with filters and a tree detail card" loading="lazy"></div>
             <div class="hs-copy">
@@ -794,22 +834,12 @@ section.card-sec>.wrap{max-width:calc(var(--max) - var(--g));background:var(--ba
             </div>
           </article>
           <article class="hs-col">
-            <div class="label hs-meta"><span>04 / iOS</span><span>App Store · In review</span></div>
+            <div class="label hs-meta"><span>06 / iOS</span><span>App Store · In review</span></div>
             <h3>Kin &amp; Tot</h3>
             <div class="hs-tiles hs-tiles--app"><img class="hs-icon" src="https://avinoz.com/assets/images/apps/kin-and-tot.png" alt="Kin &amp; Tot app icon" loading="lazy"><img class="hs-phone" src="images/kinandtot-shot.jpg" alt="Kin &amp; Tot map of nearby families filtered by age and distance" loading="lazy"></div>
             <div class="hs-copy">
               <p class="hs-intent">“An app families actually open.”</p>
               <p class="hs-tags">Product / UX &amp; UI / native iOS engineering</p>
-              
-            </div>
-          </article>
-          <article class="hs-col">
-            <div class="label hs-meta"><span>05 / iOS</span><span>App Store · In review</span></div>
-            <h3>Nugget Log</h3>
-            <div class="hs-tiles hs-tiles--app"><img class="hs-icon" src="images/nuggetlog-icon.jpg" alt="Nugget Log app icon" loading="lazy"><img class="hs-phone" src="images/nuggetlog-shot.jpg" alt="Nugget Log Today screen tracking sleep, feeds and diapers" loading="lazy"></div>
-            <div class="hs-copy">
-              <p class="hs-intent">“Log the little moments, together.”</p>
-              <p class="hs-tags">Product / illustration / native iOS engineering</p>
               
             </div>
           </article>
