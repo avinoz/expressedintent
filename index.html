@@ -494,7 +494,7 @@ main,footer{position:relative}
 .hs-store span{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);white-space:nowrap}
 a.hs-store:hover b{transform:translateY(-4px)}
 @media(max-width:600px){.hs-stores{right:0;bottom:4%;flex-direction:column;align-items:center;gap:10px}.hs-store{--s:46px}.hs-store+.hs-store{margin:0;z-index:0}}
-@media(max-width:600px){.hs-tiles--app.hs-tiles--stores .hs-phone{height:auto;width:calc(100% - var(--ic) * .78 - 72px)}}
+@media(max-width:600px){.hs-tiles--app.hs-tiles--stores{container-type:size}.hs-tiles--app.hs-tiles--stores .hs-phone{height:auto;width:min(calc(100cqw - var(--ic) * .78 - 72px),calc((100cqh - var(--ic) * .32) * 640 / 1391))}}
 @media (prefers-reduced-motion:reduce){
   .hs-tiles{min-height:340px}
   .hs-web,.hs-icon,.hs-phone,.hs-stores{opacity:1}
