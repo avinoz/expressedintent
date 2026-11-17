@@ -1,0 +1,952 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Map the Reel — Case study | Expressed Intent</title>
+<link rel="icon" href="images/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="images/favicon.png">
+<meta name="description" content="Map the Reel: share a reel, and every place in it lands on your own map. On-device AI, no account, group voting from any browser.">
+<meta property="og:title" content="Map the Reel — Case study">
+<meta property="og:description" content="Every place from every reel, on your map.">
+<meta property="og:image" content="https://expressedintent.com/images/mtr/store-02-every-place.jpg">
+<meta name="theme-color" content="#8ea3a0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anta&family=Caveat:wght@500&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;1,300&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#8ea3a0; --band:#6f8681; --ink:#fbfaf4; --ink-2:#1d302d; --ink-3:#344b47; --line:rgba(251,250,244,.38);
+  --accent:#286273; --signal:#4ade80; --sand:#f3dfa6; --night:#1b2a28; --night-ink:#f3efe2;
+  --navy:#1c2a5e; --navy-2:#24356f; --red:#e0533f; --peach:#f6c9a2;
+  --display:"Anta",system-ui,sans-serif; --hand:"Caveat","Bradley Hand",cursive;
+  --sans:"IBM Plex Sans",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+  --g:clamp(16px,4vw,64px); --max:1240px; --ease:cubic-bezier(.2,.8,.2,1);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#2b3a38; --band:#1f2c2a; --ink:#f3f1e8; --ink-2:#c9d3cf; --ink-3:#9aaba7; --line:rgba(243,241,232,.18); --accent:#6fb0c2; --night:#141e1d;
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:clip}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:clip}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background-image:radial-gradient(color-mix(in srgb,var(--ink) 9%,transparent) 1px,transparent 1.2px),linear-gradient(180deg,color-mix(in srgb,var(--bg) 92%,#000) 0%,var(--bg) 40%,color-mix(in srgb,var(--bg) 88%,#fff) 100%);background-size:7px 7px,100% 100%;transform:translateZ(0)}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--g)}
+.label{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.caps{font-family:var(--display);text-transform:uppercase;letter-spacing:.01em}
+.hand{font-family:var(--hand);font-weight:500;font-size-adjust:.5}
+section{padding:clamp(64px,9vw,128px) 0}
+.band{background:var(--band);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.sh{display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap;margin-bottom:clamp(32px,4vw,56px)}
+.sh h2{font-family:var(--hand);font-weight:500;font-size-adjust:.5;font-size:clamp(44px,6vw,84px);line-height:.95;letter-spacing:-.01em}
+.sh h2 em{font-style:normal;color:var(--sand)}
+.sh p{max-width:34ch;color:var(--ink-2)}
+.rv{opacity:0;transform:translateY(28px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.rv.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none}*{animation:none!important;transition:none!important}}
+
+/* header */
+.hdr{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid transparent}
+.hdr .wrap{display:flex;align-items:center;justify-content:space-between;height:68px;gap:16px}
+.back{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;display:flex;gap:8px;align-items:center}
+.back:hover{color:var(--sand)}
+.wordmark{display:flex;align-items:center;gap:10px;font-family:var(--display);font-size:16px;letter-spacing:.06em;text-transform:uppercase}
+.wordmark svg{width:22px;height:22px}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;background:var(--ink);color:#14211f;font-size:14px;font-weight:500;box-shadow:0 0 0 3px color-mix(in srgb,var(--ink) 35%,transparent);transition:background .3s}
+.pill:hover{background:var(--sand)}
+@media(max-width:640px){.wordmark span{display:none}.hdr .pill{display:none}}
+
+/* hero */
+.hero{padding:clamp(40px,6vw,80px) 0 0;overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:clamp(24px,4vw,64px);align-items:center}
+.hero-icon{width:clamp(84px,9vw,120px);border-radius:23%;box-shadow:0 24px 40px -18px rgba(10,20,18,.6);margin-bottom:26px}
+.hero h1{font-family:var(--display);text-transform:uppercase;font-weight:400;font-size:clamp(52px,8vw,112px);line-height:.9;letter-spacing:-.005em}
+.hero .tag{font-family:var(--hand);font-weight:500;font-size-adjust:.5;font-size:clamp(28px,3.2vw,44px);line-height:1.05;margin:14px 0 26px;color:var(--sand)}
+.stores{display:flex;gap:12px;flex-wrap:wrap}
+.store{display:flex;align-items:center;gap:10px;padding:9px 16px 9px 10px;border-radius:14px;background:var(--night);color:var(--night-ink);transition:transform .3s var(--ease)}
+.store:hover{transform:translateY(-3px)}
+.store b{width:30px;height:30px;border-radius:8px;display:grid;place-items:center}
+.store.apple b{background:linear-gradient(180deg,#1ec3fb,#1a74f2)}
+.store svg{width:72%;height:72%}
+.store small{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;opacity:.7}
+.store span{font-weight:500;font-size:15px;line-height:1.1}
+.store i{width:7px;height:7px;border-radius:50%;background:var(--signal);margin-left:6px}
+.fan{position:relative;height:clamp(420px,52vw,640px)}
+.fan img{position:absolute;bottom:-6%;width:44%;border-radius:22px;box-shadow:0 40px 60px -30px rgba(10,20,18,.7);transition:transform 1.2s var(--ease)}
+.fan img:nth-child(1){left:2%;transform:rotate(-9deg) translateY(10%)}
+.fan img:nth-child(2){left:28%;z-index:2;transform:translateY(-4%)}
+.fan img:nth-child(3){left:54%;transform:rotate(9deg) translateY(10%)}
+.fan:hover img:nth-child(1){transform:rotate(-12deg) translate(-4%,8%)}
+.fan:hover img:nth-child(3){transform:rotate(12deg) translate(4%,8%)}
+@media(max-width:820px){.hero-grid{grid-template-columns:1fr}.fan{height:clamp(360px,100vw,520px)}}
+
+/* numbers */
+.nums{display:grid;grid-template-columns:repeat(2,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.num{padding:clamp(22px,3vw,36px) clamp(12px,2vw,24px);border-left:1px solid var(--line)}
+.num:first-child{border-left:0}
+.num b{display:block;font-family:var(--display);font-weight:400;font-size:clamp(40px,5.4vw,76px);line-height:1}
+.num span{display:block;margin-top:10px;font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+
+
+/* story */
+.quote{font-family:var(--hand);font-weight:500;font-size-adjust:.5;font-size:clamp(36px,4.8vw,68px);line-height:1.02;max-width:20ch}
+.quote em{font-style:normal;color:var(--sand)}
+.quote-by{margin-top:18px}
+.chaos{display:grid;grid-template-columns:1fr auto 1fr;gap:clamp(16px,3vw,40px);align-items:center;margin-top:clamp(40px,6vw,72px)}
+.bubbles{display:flex;flex-direction:column;gap:12px}
+.bub{max-width:80%;padding:11px 16px;border-radius:20px;font-size:15px;line-height:1.3;color:#fff;box-shadow:0 10px 20px -14px rgba(0,0,0,.5)}
+.bub.g{background:#34c759;border-bottom-left-radius:6px}
+.bub.b{background:#0a84ff;align-self:flex-end;border-bottom-right-radius:6px}
+.bub small{display:block;font-size:11px;opacity:.8;margin-bottom:2px}
+.arrow{font-family:var(--display);font-size:clamp(28px,4vw,48px);color:var(--sand)}
+.tl{background:var(--ink);color:#1d302d;border-radius:24px;padding:18px;box-shadow:0 30px 50px -28px rgba(10,20,18,.7)}
+.tl-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.tl-head img{width:34px;border-radius:9px}
+.tl-head b{font-weight:500}
+.tl-row{display:grid;grid-template-columns:38px 1fr auto;gap:10px;align-items:center;padding:10px 4px;border-top:1px solid #e6e3d8}
+.tl-row i{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font-style:normal;font-size:18px}
+.tl-row b{font-weight:500;display:block;line-height:1.2}
+.tl-row small{color:#5d6b68;font-size:12px}
+.tl-row time{font-family:var(--mono);font-size:12px;color:#5d6b68}
+@media(max-width:760px){.chaos{grid-template-columns:1fr}.arrow{transform:rotate(90deg);justify-self:center}}
+
+/* hub */
+.hub{max-width:820px;margin:0 auto}
+.hub svg{width:100%;height:auto;overflow:visible}
+.hub text{font-family:var(--sans);fill:var(--ink);font-size:15px}
+.hub .sm{font-family:var(--mono);font-size:12px;letter-spacing:.08em;fill:var(--ink-2)}
+.hub .rl{font-family:var(--display);font-size:17px;text-transform:uppercase;fill:var(--ink)}
+.hub .emo{font-size:36px}
+@media(max-width:600px){.hub .sm{font-size:22px}.hub .rl{font-size:28px}.hub .emo{font-size:50px}.hub .ctr{font-size:22px}}
+.hub .ln{stroke:var(--ink);stroke-width:1.5;stroke-dasharray:4 6;opacity:.6;animation:flow 1.6s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-20}}
+
+/* decisions */
+.dgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.dc{background:color-mix(in srgb,var(--ink) 12%,transparent);border:1px solid var(--line);border-radius:22px;padding:22px;display:flex;flex-direction:column;gap:14px;min-height:340px}
+.dc .vis{flex:1;display:grid;place-items:center;border-radius:16px;background:color-mix(in srgb,var(--night) 82%,transparent);padding:18px;min-height:150px}
+.dc h3{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:clamp(20px,1.7vw,24px);line-height:1.05}
+.dc p{color:var(--ink-2);font-size:15px}
+.dc .why{display:inline-flex;align-self:flex-start;gap:8px;align-items:center;padding:5px 10px;border-radius:999px;background:var(--sand);color:#3b2f12;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.chip{padding:7px 12px;border-radius:999px;font-size:13px;font-weight:500;background:var(--ink);color:#1d302d}
+.chip.on{background:var(--signal);color:#0d2a17}
+.duo{display:flex;align-items:center;gap:14px;color:var(--night-ink);font-family:var(--mono);font-size:12px}
+.duo .t{width:56px;height:56px;border-radius:15px;display:grid;place-items:center}
+.duo .t svg{width:60%;height:60%}
+.swap{display:grid;grid-template-columns:auto auto auto;gap:10px;align-items:center;margin-top:14px;color:var(--night-ink);font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+.swap s{opacity:.55}
+.swap b{color:var(--signal);font-weight:500}
+.tap{position:relative;width:96px;height:96px;border-radius:50%;background:var(--red);display:grid;place-items:center;color:#fff;font-family:var(--display);font-size:13px;letter-spacing:.06em}
+.tap::before,.tap::after{content:"";position:absolute;inset:-12px;border-radius:50%;border:2px solid var(--red);opacity:0;animation:ring 2.4s var(--ease) infinite}
+.tap::after{animation-delay:1.2s}
+@keyframes ring{0%{transform:scale(.7);opacity:.8}100%{transform:scale(1.4);opacity:0}}
+.where{display:flex;gap:6px;margin-top:16px;justify-content:center;flex-wrap:wrap}
+.where span{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--night-ink);border:1px solid color-mix(in srgb,var(--night-ink) 30%,transparent);border-radius:999px;padding:4px 9px}
+.noad{position:relative;font-family:var(--display);font-size:44px;color:var(--night-ink)}
+.noad::after{content:"";position:absolute;left:-10%;right:-10%;top:50%;height:4px;background:var(--red);transform:rotate(-14deg);border-radius:2px}
+.free{font-family:var(--hand);font-size:34px;color:var(--sand);margin-top:6px;font-size-adjust:.5;font-weight:500}
+.lock{width:62px;height:62px}
+.safe{display:flex;flex-direction:column;gap:8px;align-items:stretch;width:100%;max-width:230px}
+.safe div{display:flex;justify-content:space-between;gap:10px;padding:8px 12px;border-radius:12px;background:color-mix(in srgb,var(--night-ink) 10%,transparent);color:var(--night-ink);font-size:13px}
+.safe div b{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--signal);font-weight:500}
+@media(max-width:980px){.dgrid{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){.dgrid{grid-template-columns:1fr}.dc{min-height:0}}
+
+/* build timeline */
+.track{position:relative;display:grid;grid-template-columns:repeat(7,1fr);gap:12px;padding-top:40px}
+.track::before{content:"";position:absolute;left:0;right:0;top:15px;height:2px;background:var(--line)}
+.track::after{content:"";position:absolute;left:0;top:15px;height:2px;width:0;background:var(--sand);transition:width 2.4s var(--ease)}
+.track.in::after{width:100%}
+.ms{position:relative}
+.ms::before{content:"";position:absolute;top:-31px;left:0;width:14px;height:14px;border-radius:50%;background:var(--bg);border:2px solid var(--sand)}
+.ms.big::before{background:var(--signal);border-color:var(--signal);box-shadow:0 0 0 6px color-mix(in srgb,var(--signal) 25%,transparent)}
+.ms time{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--sand)}
+.ms b{display:block;font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:17px;line-height:1.1;margin:6px 0 6px}
+.ms p{font-size:13px;color:var(--ink-2);line-height:1.35}
+.gap{grid-column:span 1;display:flex;align-items:flex-start}
+@media(max-width:900px){
+  .track{grid-template-columns:1fr;gap:22px;padding:0 0 0 34px}
+  .track::before,.track::after{left:6px;right:auto;top:0;bottom:0;width:2px;height:auto}
+  .track::after{height:0;transition:height 2.4s var(--ease)} .track.in::after{height:100%;width:2px}
+  .ms::before{top:2px;left:-34px}
+}
+
+/* identity */
+.evo{display:flex;align-items:center;gap:clamp(8px,1.6vw,20px);overflow-x:auto;padding-bottom:12px;scroll-snap-type:x mandatory}
+.evo figure{flex:none;width:clamp(110px,15vw,170px);scroll-snap-align:start;text-align:center}
+.evo img{width:100%;border-radius:23%;box-shadow:0 20px 30px -18px rgba(10,20,18,.6)}
+.evo figcaption{margin-top:10px}
+.evo .final img{outline:3px solid var(--sand);outline-offset:5px}
+.evo .ar{flex:none;font-family:var(--display);font-size:22px;color:var(--sand)}
+.idgrid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:16px;margin-top:clamp(28px,4vw,48px)}
+.idgrid figure{border-radius:20px;overflow:hidden;background:var(--night);position:relative}
+.idgrid img{width:100%;height:100%;object-fit:cover}
+.idgrid figcaption{position:absolute;left:12px;bottom:12px;padding:5px 10px;border-radius:999px;background:rgba(10,20,18,.65);color:#fff;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+.idgrid .tall{aspect-ratio:9/16}
+.palette{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.palette span{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+.palette i{width:28px;height:28px;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+@media(max-width:820px){.idgrid{grid-template-columns:1fr 1fr}.idgrid .wide{grid-column:1/-1}}
+
+/* gallery */
+.gal{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding:6px var(--g) 18px;margin:0 calc(var(--g) * -1)}
+.gal img{flex:none;width:clamp(200px,22vw,260px);border-radius:22px;scroll-snap-align:center;box-shadow:0 26px 40px -24px rgba(10,20,18,.6);transition:transform .5s var(--ease)}
+.gal img:hover{transform:translateY(-8px)}
+.gal::-webkit-scrollbar{height:6px}.gal::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
+
+/* stack */
+.bar{display:flex;height:56px;border-radius:16px;overflow:hidden;box-shadow:0 20px 30px -20px rgba(10,20,18,.6)}
+.bar div{display:flex;align-items:center;padding:0 16px;font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;overflow:hidden;width:0;transition:width 1.6s var(--ease)}
+.bar.in .sw{width:70%}.bar.in .kt{width:27%}.bar.in .sq{width:3%}
+.sw{background:#f0663a;color:#fff}.kt{background:#7f52ff;color:#fff}.sq{background:#3ecf8e}
+.stack-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px}
+.sc{border:1px solid var(--line);border-radius:18px;padding:18px}
+.sc h4{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:18px;margin:6px 0 12px}
+.sc .chips{justify-content:flex-start}
+.sc .chip{background:color-mix(in srgb,var(--ink) 16%,transparent);color:var(--ink);font-weight:400}
+@media(max-width:760px){.stack-cols{grid-template-columns:1fr}}
+
+/* end */
+.end{text-align:center}
+.end .quote{margin:0 auto 26px;text-align:center}
+.end .stores{justify-content:center}
+.next{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:clamp(48px,6vw,80px);padding-top:24px;border-top:1px solid var(--line)}
+.next a{display:flex;flex-direction:column;gap:6px}
+.next a b{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:clamp(22px,2.6vw,34px)}
+.next a:hover b{color:var(--sand)}
+footer{padding:28px 0 40px;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+/* ---------- Map the Reel additions ---------- */
+:root{--teal:#4fc3bf;--pink:#f4a3b5;--yellow:#f8d65a;--berry:#b8325a;--cream:#f3dfa6;--deep:#1d2a5e}
+.store.soon{opacity:.92}
+.store.soon i{background:var(--yellow)}
+.store.web b{background:var(--teal)}
+.store.web svg{width:62%;height:62%}
+
+/* lost saves -> map */
+.lost{display:grid;grid-template-columns:1fr auto 1fr;gap:clamp(16px,3vw,40px);align-items:center;margin-top:clamp(40px,6vw,72px)}
+.saved{position:relative;background:var(--night);border-radius:24px;padding:16px;box-shadow:0 30px 50px -28px rgba(10,20,18,.7)}
+.saved .bar-top{display:flex;justify-content:space-between;color:var(--night-ink);font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px;opacity:.8}
+.saved .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.saved .grid div{aspect-ratio:9/14;border-radius:8px;background:#2c3b39 center/cover;position:relative;filter:saturate(.75) brightness(.85)}
+.saved .grid div::after{content:"▶";position:absolute;right:6px;bottom:4px;font-size:10px;color:#fff;opacity:.8}
+.saved .q{position:absolute;font-family:var(--hand);font-weight:500;font-size-adjust:.5;color:var(--yellow);font-size:34px;transform:rotate(-8deg)}
+.saved .q.a{top:38%;left:8%}.saved .q.b{top:12%;right:10%;transform:rotate(10deg)}.saved .q.c{bottom:10%;left:40%}
+.minimap{position:relative;border-radius:24px;overflow:hidden;aspect-ratio:4/5;background:#efe7cf;box-shadow:0 30px 50px -28px rgba(10,20,18,.7)}
+.minimap svg{position:absolute;inset:0;width:100%;height:100%}
+.pin{position:absolute;width:38px;height:38px;border-radius:11px;display:grid;place-items:center;color:#fff;font-size:16px;box-shadow:0 8px 16px -6px rgba(0,0,0,.45);border:2px solid #fff;transform:translate(-50%,-100%)}
+.pin::after{content:"";position:absolute;left:50%;bottom:-9px;width:2px;height:8px;background:#fff;transform:translateX(-50%)}
+.pin span{position:absolute;top:100%;margin-top:12px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:11px;font-weight:500;color:#1d302d;background:rgba(255,255,255,.85);padding:2px 7px;border-radius:999px}
+.minimap.in .pin{animation:drop .7s var(--ease) both}
+.minimap .pin:nth-of-type(2){animation-delay:.15s}.minimap .pin:nth-of-type(3){animation-delay:.3s}.minimap .pin:nth-of-type(4){animation-delay:.45s}
+@keyframes drop{0%{transform:translate(-50%,-260%);opacity:0}70%{transform:translate(-50%,-90%);opacity:1}100%{transform:translate(-50%,-100%)}}
+@media(max-width:760px){.lost{grid-template-columns:1fr}.lost .arrow{transform:rotate(90deg);justify-self:center}}
+
+/* pipeline */
+.pipe{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;position:relative}
+.step{background:color-mix(in srgb,var(--ink) 12%,transparent);border:1px solid var(--line);border-radius:20px;padding:18px 16px;position:relative}
+.step .ic{width:52px;height:52px;border-radius:15px;display:grid;place-items:center;font-size:24px;margin-bottom:14px;box-shadow:0 12px 20px -12px rgba(0,0,0,.5)}
+.step b{display:block;font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:17px;line-height:1.05;margin-bottom:6px}
+.step p{font-size:13px;color:var(--ink-2);line-height:1.35}
+.step .n{position:absolute;top:14px;right:16px;font-family:var(--mono);font-size:11px;color:var(--ink-3)}
+.step.dev{border-color:color-mix(in srgb,var(--signal) 55%,transparent)}
+.step.dev .tagd{display:inline-block;margin-top:10px;font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#0d2a17;background:var(--signal);padding:3px 7px;border-radius:999px}
+@media(max-width:1000px){.pipe{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:560px){.pipe{grid-template-columns:1fr 1fr}}
+
+/* vote mock */
+.vote{display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,4vw,56px);align-items:center}
+.vcard{background:var(--cream);color:#1d2a5e;border-radius:28px;padding:22px;box-shadow:0 30px 50px -28px rgba(10,20,18,.7);max-width:400px;justify-self:center;width:100%}
+.vcard h4{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:22px;line-height:1.05;margin:4px 0 4px}
+.vcard .who{font-size:13px;opacity:.75;margin-bottom:14px}
+.opt{position:relative;display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-radius:14px;background:#fff8e2;margin-bottom:8px;overflow:hidden;font-weight:500;font-size:15px}
+.opt i{position:absolute;left:0;top:0;bottom:0;width:0;background:color-mix(in srgb,var(--teal) 45%,transparent);transition:width 1.4s var(--ease)}
+.opt span,.opt small{position:relative}
+.opt small{font-family:var(--mono);font-size:12px}
+.vcard.in .o1 i{width:72%}.vcard.in .o2 i{width:44%}.vcard.in .o3 i{width:18%}
+.opt.win{outline:2px solid var(--berry)}
+.vcard .on{margin-top:12px;text-align:center;padding:12px;border-radius:14px;background:var(--berry);color:#fff;font-family:var(--display);text-transform:uppercase;letter-spacing:.04em}
+.vfacts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.vf{border:1px solid var(--line);border-radius:18px;padding:18px}
+.vf b{display:block;font-family:var(--display);font-weight:400;font-size:clamp(34px,4vw,52px);line-height:1}
+.vf span{display:block;margin-top:8px;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+@media(max-width:820px){.vote{grid-template-columns:1fr}}
+
+/* site shot */
+.siteshot{border-radius:22px;overflow:hidden;box-shadow:0 30px 50px -28px rgba(10,20,18,.7);margin-top:clamp(28px,4vw,48px);position:relative}
+.siteshot .chrome{display:flex;gap:6px;align-items:center;padding:10px 14px;background:#0f1730}
+.siteshot .chrome i{width:10px;height:10px;border-radius:50%;background:#3a4466}
+.siteshot .chrome span{margin-left:12px;font-family:var(--mono);font-size:12px;color:#aab3d6}
+.bar.in .js{width:20%} .js{background:#f7df1e;color:#222}
+.bar.in .sw2{width:80%} .sw2{background:#f0663a;color:#fff}
+
+/* hard part: edge cases */
+.cases{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.case{background:var(--night);color:var(--night-ink);border-radius:22px;padding:20px;display:flex;flex-direction:column;gap:12px;box-shadow:0 24px 40px -26px rgba(10,20,18,.7)}
+.case .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;opacity:.6}
+.case .said{font-family:var(--hand);font-weight:500;font-size-adjust:.5;font-size:24px;line-height:1.1;color:var(--cream)}
+.case .row{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:12px;font-size:14px;line-height:1.3}
+.case .row b{flex:none;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:12px;color:#fff;margin-top:1px}
+.case .bad{background:color-mix(in srgb,#e0533f 18%,transparent)}
+.case .bad b{background:#e0533f}
+.case .bad span{text-decoration:line-through;text-decoration-color:#e0533f;opacity:.85}
+.case .good{background:color-mix(in srgb,var(--signal) 16%,transparent)}
+.case .good b{background:#22a35a}
+.hardnums{display:flex;gap:clamp(16px,4vw,56px);flex-wrap:wrap;margin-top:clamp(28px,4vw,44px);padding-top:22px;border-top:1px solid var(--line)}
+.hardnums div b{display:block;font-family:var(--display);font-weight:400;font-size:clamp(34px,4vw,52px);line-height:1}
+.hardnums div span{display:block;margin-top:8px;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+@media(max-width:980px){.cases{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){.cases{grid-template-columns:1fr}}
+
+/* free by design: waterfall */
+.fall{display:grid;grid-template-columns:1.25fr 1fr;gap:clamp(24px,4vw,64px);align-items:center}
+.tiers{display:flex;flex-direction:column;gap:10px}
+.tier{display:grid;grid-template-columns:56px 1fr auto;gap:14px;align-items:center;padding:14px 16px;border-radius:18px;background:color-mix(in srgb,var(--ink) 12%,transparent);border:1px solid var(--line);position:relative}
+.tier:nth-child(2){margin-left:4%}.tier:nth-child(3){margin-left:8%}.tier:nth-child(4){margin-left:12%}.tier:nth-child(5){margin-left:16%}
+.tier .k{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;font-family:var(--display);font-size:20px;color:#1d2a5e}
+.tier b{display:block;font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:17px;line-height:1.1}
+.tier small{display:block;font-size:13px;color:var(--ink-2);margin-top:3px;line-height:1.3}
+.tier .cost{font-family:var(--mono);font-size:12px;letter-spacing:.06em;padding:5px 10px;border-radius:999px;background:var(--signal);color:#0d2a17;white-space:nowrap}
+.tier .cost.own{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.tier.own{border-style:dashed;background:transparent}
+.tier::after{content:"↓ nothing found";position:absolute;left:24px;bottom:-15px;font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:var(--ink-3);background:var(--bg);padding:0 6px;z-index:1}
+.tier:last-child::after{display:none}
+.band .tier::after{background:var(--band)}
+.rule{font-family:var(--hand);font-weight:500;font-size-adjust:.5;font-size:clamp(34px,4.2vw,58px);line-height:1.02}
+.rule em{font-style:normal;color:var(--cream)}
+.rule-sub{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px}
+@media(max-width:860px){.fall{grid-template-columns:1fr}.tier{margin-left:0!important;grid-template-columns:44px 1fr}.tier .k{width:44px;height:44px;font-size:16px}.tier .cost{grid-column:2;justify-self:start}}
+
+/* web vote: options */
+.opts{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.optc{border-radius:22px;padding:20px;border:1px solid var(--line);background:color-mix(in srgb,var(--ink) 10%,transparent);display:flex;flex-direction:column;gap:12px;position:relative}
+.optc .vis2{height:120px;border-radius:16px;background:var(--night);display:grid;place-items:center;color:var(--night-ink);font-size:34px}
+.optc h3{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:20px;line-height:1.05}
+.optc ul{list-style:none;display:flex;flex-direction:column;gap:6px;font-size:14px}
+.optc li{display:flex;gap:8px;align-items:flex-start;color:var(--ink-2)}
+.optc li b{flex:none;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;font-size:11px;color:#fff;margin-top:1px}
+.optc .x b{background:#e0533f}.optc .v b{background:#22a35a}
+.optc.pick{border:2px solid var(--signal);background:color-mix(in srgb,var(--signal) 10%,transparent)}
+.optc .verdict{position:absolute;top:14px;right:14px;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:4px 8px;border-radius:999px}
+.optc .no{background:#e0533f;color:#fff}.optc .yes{background:var(--signal);color:#0d2a17}
+.devices{display:flex;gap:8px;font-size:30px}
+@media(max-width:860px){.opts{grid-template-columns:1fr}}
+
+/* web vote: flow */
+.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:clamp(28px,4vw,48px);align-items:stretch}
+.fs{position:relative;border-radius:18px;padding:16px;background:var(--night);color:var(--night-ink)}
+.fs .who{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;opacity:.65}
+.fs b{display:block;font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:16px;line-height:1.1;margin:8px 0 6px}
+.fs p{font-size:13px;opacity:.8;line-height:1.35}
+.fs .em{font-size:26px}
+.fs:not(:last-child)::after{content:"→";position:absolute;right:-12px;top:50%;transform:translateY(-50%);font-family:var(--display);color:var(--cream);font-size:18px;z-index:2}
+.fs.web{background:var(--cream);color:#1d2a5e}
+@media(max-width:900px){.flow{grid-template-columns:1fr 1fr}.fs:not(:last-child)::after{display:none}}
+@media(max-width:520px){.flow{grid-template-columns:1fr}}
+
+/* web vote: logic rules */
+.logic{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:clamp(28px,4vw,48px)}
+.lg{border-radius:18px;padding:16px;border:1px solid var(--line);background:color-mix(in srgb,var(--ink) 8%,transparent);display:flex;flex-direction:column;gap:8px}
+.lg .q{font-family:var(--hand);font-weight:500;font-size-adjust:.5;font-size:22px;line-height:1.1;color:var(--cream)}
+.lg .a{font-size:13px;color:var(--ink-2);line-height:1.35}
+.lg .t{align-self:flex-start;font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:999px;background:var(--ink);color:#1d302d}
+@media(max-width:1000px){.logic{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.logic{grid-template-columns:1fr}}
+
+/* android */
+.cmp{display:grid;grid-template-columns:1.1fr 1fr 1fr;border:1px solid var(--line);border-radius:22px;overflow:hidden}
+.cmp>div{padding:14px 18px;border-top:1px solid var(--line);font-size:14px;display:flex;align-items:center;gap:10px}
+.cmp>div:nth-child(-n+3){border-top:0;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);background:color-mix(in srgb,var(--night) 25%,transparent)}
+.cmp .ok{color:var(--ink)}.cmp .ok::before{content:"✓";color:var(--signal);font-weight:700}
+.cmp .cost::before{content:"$";flex:none;width:20px;height:20px;border-radius:50%;background:#e0533f;color:#fff;display:grid;place-items:center;font-size:12px;font-weight:700}
+.cmp .what{font-family:var(--display);text-transform:uppercase;font-size:15px}
+.andro{display:grid;grid-template-columns:1.4fr 1fr;gap:clamp(24px,4vw,56px);align-items:center}
+.verdict2{border-radius:22px;padding:22px;background:var(--night);color:var(--night-ink)}
+.verdict2 .rule{color:var(--night-ink)}
+.verdict2 p{font-size:14px;opacity:.85;margin-top:12px}
+.verdict2 .stillv{display:flex;gap:10px;align-items:center;margin-top:16px;padding:12px;border-radius:14px;background:color-mix(in srgb,var(--signal) 18%,transparent);font-size:14px}
+@media(max-width:900px){.andro{grid-template-columns:1fr}.cmp{grid-template-columns:1fr 1fr 1fr;font-size:12px}.cmp>div{padding:10px;font-size:12px}}
+
+/* dig: under the hood */
+.cases.two{grid-template-columns:1fr 1fr}
+@media(max-width:620px){.cases.two{grid-template-columns:1fr}}
+.sub{font-family:var(--hand);font-weight:500;font-size-adjust:.5;font-size:clamp(30px,3.6vw,50px);line-height:1;margin:clamp(48px,6vw,80px) 0 clamp(20px,3vw,32px)}
+.sub em{font-style:normal;color:var(--cream)}
+.dig{display:grid;grid-template-columns:1fr minmax(240px,300px) 1fr;gap:clamp(14px,2vw,28px);align-items:center}
+.layers{display:flex;flex-direction:column;gap:12px}
+.ly{position:relative;border-radius:16px;padding:14px 16px;background:var(--night);color:var(--night-ink);box-shadow:0 18px 30px -22px rgba(0,0,0,.6)}
+.ly .tool{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#0d2a17;background:var(--signal);padding:3px 8px;border-radius:999px;margin-bottom:8px}
+.ly b{display:block;font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:15px;line-height:1.15;margin-bottom:6px}
+.ly code{display:block;font-family:var(--mono);font-size:12px;color:var(--cream);opacity:.95}
+.layers.left .ly::after,.layers.right .ly::after{content:"";position:absolute;top:50%;width:clamp(14px,2vw,28px);height:2px;background:repeating-linear-gradient(90deg,var(--cream) 0 5px,transparent 5px 9px)}
+.layers.left .ly::after{right:calc(clamp(14px,2vw,28px) * -1)}
+.layers.right .ly::after{left:calc(clamp(14px,2vw,28px) * -1)}
+.reelcard{position:relative;border-radius:30px;overflow:hidden;background:#111;box-shadow:0 34px 60px -30px rgba(0,0,0,.75);border:6px solid #111}
+.rc-img{aspect-ratio:9/12;background:center/cover;position:relative}
+.rc-ocr{position:absolute;left:12px;right:12px;top:16px;font-family:var(--display);font-size:18px;color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.7);outline:2px dashed var(--signal);outline-offset:4px;border-radius:4px;padding:2px 4px}
+.rc-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:54px;height:54px;border-radius:50%;background:rgba(0,0,0,.45);display:grid;place-items:center;color:#fff;font-size:20px}
+.rc-body{padding:12px 14px 16px;color:#eee;font-size:13px;line-height:1.4;background:#111}
+.rc-body b{color:#fff}
+.rc-body span{color:#6fb0ff}
+.rc-scan{position:absolute;left:0;right:0;height:40%;top:-40%;background:linear-gradient(180deg,transparent,color-mix(in srgb,var(--signal) 28%,transparent),transparent);animation:scan 3.2s var(--ease) infinite;pointer-events:none}
+@keyframes scan{to{top:100%}}
+@media(max-width:900px){.dig{grid-template-columns:1fr}.reelcard{max-width:300px;justify-self:center;order:-1}.layers.left .ly::after,.layers.right .ly::after{display:none}}
+.gates{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.gate{position:relative;border-radius:18px;padding:16px;border:1px solid var(--line);background:color-mix(in srgb,var(--ink) 10%,transparent)}
+.gate i{font-style:normal;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--cream);color:#1d2a5e;font-family:var(--display);margin-bottom:10px}
+.gate b{display:block;font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:15px;line-height:1.1;margin-bottom:6px}
+.gate p{font-size:13px;color:var(--ink-2);line-height:1.35}
+.gate:not(:last-child)::after{content:"";position:absolute;right:-9px;top:30px;width:8px;height:8px;border-top:2px solid var(--cream);border-right:2px solid var(--cream);transform:rotate(45deg)}
+.gate.done{border:2px solid var(--signal);background:color-mix(in srgb,var(--signal) 12%,transparent)}
+.gate.done i{background:var(--signal)}
+@media(max-width:1000px){.gates{grid-template-columns:repeat(3,1fr)}.gate::after{display:none}}
+@media(max-width:560px){.gates{grid-template-columns:1fr 1fr}}
+.trace{display:grid;grid-template-columns:repeat(5,1fr);border-radius:20px;overflow:hidden;border:1px solid var(--line)}
+.tr{padding:16px;border-left:1px solid var(--line);background:color-mix(in srgb,var(--night) 30%,transparent)}
+.tr:first-child{border-left:0}
+.tr .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.tr p{font-family:var(--mono);font-size:13px;margin:8px 0 6px;color:var(--ink)}
+.tr small{font-size:12px;color:var(--ink-2)}
+.tr.ok{background:color-mix(in srgb,var(--signal) 18%,transparent)}
+.tr.ok p{font-family:var(--display);font-size:18px}
+@media(max-width:900px){.trace{grid-template-columns:1fr}.tr{border-left:0;border-top:1px solid var(--line)}.tr:first-child{border-top:0}}
+.verdict2 p.rule{font-size:clamp(30px,3.4vw,46px);opacity:1;margin-top:0}
+
+/* fun on purpose */
+.fun{display:grid;grid-template-columns:minmax(260px,340px) 1fr;gap:clamp(24px,5vw,72px);align-items:center}
+.vphone{position:relative;border-radius:40px;border:8px solid #0b0f1f;overflow:hidden;aspect-ratio:9/19;background:#141d4d;box-shadow:0 40px 70px -30px rgba(0,0,0,.75);isolation:isolate}
+.vphone .glow{position:absolute;width:70%;aspect-ratio:1;border-radius:50%;filter:blur(40px);opacity:.75;transition:background-color 1.2s var(--ease)}
+.vphone .g1{left:-20%;top:-8%;background:#F06C93}.vphone .g2{right:-25%;top:18%;background:#D9772E}.vphone .g3{left:10%;bottom:-15%;background:#F06C93}
+.vphone.voted{background:#1F5F5B}.vphone.voted .g1,.vphone.voted .g3{background:#3DB89F}.vphone.voted .g2{background:#2E9A8C}
+.vp{position:relative;z-index:1;padding:26px 14px;display:flex;flex-direction:column;gap:9px;color:#f4f1e6;font-size:12px;height:100%}
+.vp .t{font-family:var(--display);font-size:17px;text-transform:uppercase;line-height:1.05}
+.vp .lbl2{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;opacity:.7}
+.vp .card2{background:#1A2766;border-radius:14px;padding:9px 10px;border:1px solid rgba(244,241,230,.12)}
+.vp .pl{display:flex;align-items:center;gap:8px;padding:5px 0}
+.vp .pl i{width:16px;height:16px;border-radius:5px;border:1.5px solid #f4f1e6;display:grid;place-items:center;font-style:normal;font-size:10px;color:#1A2766}
+.vp .pl.on i{background:#f4f1e6}
+.vp table{width:100%;border-collapse:separate;border-spacing:3px;font-size:9px;text-align:center}
+.vp td{border-radius:5px;padding:4px 0}
+.vp td.y{background:rgba(127,209,139,.25);color:#8FE39B}.vp td.m{background:rgba(250,212,71,.22);color:#FAD447}.vp td.n{background:rgba(240,108,147,.18);color:#F49BB4}
+.vp td.best{box-shadow:inset 0 -2px 0 #FAD447}
+.vp td.miss{box-shadow:inset 0 0 0 1.5px #F06C93;animation:nudge 1.6s ease infinite}
+@keyframes nudge{0%,100%{transform:none}10%{transform:translateX(-2px)}20%{transform:translateX(2px)}30%{transform:none}}
+.vp .itson{margin-top:auto;border-radius:16px;padding:12px;background:linear-gradient(135deg,#F4B183,#F06C93);color:#fff;transform:translateY(20px);opacity:0;transition:all .8s var(--ease)}
+.vphone.final .itson{transform:none;opacity:1}
+.vp .itson b{display:block;font-family:var(--display);font-size:18px;text-transform:uppercase}
+.vp .itson .btns{display:flex;gap:6px;margin-top:8px}.vp .itson .btns span{background:#fff;color:#B8436B;border-radius:999px;padding:4px 8px;font-size:10px;font-weight:600}
+.confetti{position:absolute;inset:0;z-index:3;pointer-events:none;overflow:hidden}
+.confetti i{position:absolute;bottom:-10px;width:7px;height:11px;border-radius:2px;opacity:0}
+.vphone.final .confetti i{animation:blast 2.4s cubic-bezier(.15,.6,.35,1) forwards}
+@keyframes blast{0%{opacity:1;transform:translate(0,0) rotate(0)}60%{opacity:1}100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--r))}}
+.beats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.beat{display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:center;padding:12px 14px;border-radius:16px;border:1px solid var(--line);background:color-mix(in srgb,var(--ink) 9%,transparent)}
+.beat i{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;font-style:normal;font-size:20px}
+.beat b{display:block;font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:14px;line-height:1.1}
+.beat span{display:block;font-size:12.5px;color:var(--ink-2);line-height:1.3;margin-top:3px}
+.funq{font-family:var(--hand);font-weight:500;font-size-adjust:.5;font-size:clamp(30px,3.4vw,46px);line-height:1.05;margin-bottom:18px}
+.funq em{font-style:normal;color:var(--cream)}
+@media(max-width:860px){.fun{grid-template-columns:1fr}.vphone{max-width:300px;justify-self:center}.beats{grid-template-columns:1fr}}
+
+/* themes */
+.manifesto2{font-family:var(--display);text-transform:uppercase;font-size:clamp(34px,5.4vw,76px);line-height:.95;letter-spacing:-.005em;margin-bottom:clamp(24px,4vw,44px)}
+.manifesto2 s{text-decoration-thickness:6px;text-decoration-color:#e0533f;opacity:.6}
+.manifesto2 em{font-style:normal;background:linear-gradient(90deg,#F4B183,#F06C93,#B13C60);-webkit-background-clip:text;background-clip:text;color:transparent}
+.themes{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.th{border-radius:26px;padding:16px;box-shadow:0 28px 46px -26px rgba(0,0,0,.6);display:flex;flex-direction:column;gap:10px;transition:transform .4s var(--ease)}
+.th:hover{transform:translateY(-6px) rotate(-1deg)}
+.th .nm{font-family:var(--display);font-size:24px;text-transform:uppercase;line-height:1}
+.th .insp{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;opacity:.8}
+.th .mini{border-radius:16px;padding:10px;display:flex;flex-direction:column;gap:7px}
+.th .row3{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600}
+.th .row3 i{width:22px;height:22px;border-radius:7px;display:grid;place-items:center;font-style:normal;font-size:11px;color:#fff}
+.th .row3 small{display:block;font-weight:400;opacity:.75;font-size:10.5px}
+.th .btn3{align-self:flex-start;border-radius:999px;padding:6px 12px;font-size:12px;font-weight:600}
+.th .swatch{display:flex;gap:6px}.th .swatch span{width:22px;height:22px;border-radius:50%;box-shadow:0 0 0 2px rgba(255,255,255,.35)}
+.th .def{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;align-self:flex-start;padding:3px 8px;border-radius:999px;background:rgba(0,0,0,.15)}
+@media(max-width:980px){.themes{grid-template-columns:1fr 1fr}}
+
+/* goals */
+.goals{list-style:none;display:flex;flex-direction:column;gap:8px;margin:0 0 26px;max-width:46ch}
+.goals li{display:grid;grid-template-columns:26px 1fr;gap:10px;align-items:start;font-size:clamp(15px,1.15vw,17px);line-height:1.35;color:var(--ink)}
+.goals li::before{content:"";width:18px;height:18px;margin-top:2px;border-radius:6px;background:var(--sand,#f3dfa6) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='%231d302d' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/12px no-repeat}
+.goals-lbl{display:block;margin:4px 0 10px}
+
+/* side section nav (same as the main page) */
+.snav{--xp:cubic-bezier(.19,1,.22,1);--cb:cubic-bezier(.33,1,.68,1);--sn-bg:var(--ink);--sn-ink:#1d302d;--sn-sh:0 0 0 1px rgba(20,21,27,.05),0 1px 2px rgba(20,21,27,.06),0 12px 32px -8px rgba(20,21,27,.16);
+  position:fixed;right:16px;top:50%;transform:translateY(-50%);z-index:60;display:flex;opacity:0;pointer-events:none;transition:opacity .8s var(--xp)}
+.snav.on{opacity:1;pointer-events:auto}
+.snav-dots{display:flex;flex-direction:column;align-items:center;gap:12px;padding:8px;border-radius:999px;background:var(--sn-bg);box-shadow:var(--sn-sh);list-style:none;margin:0}
+.snav-dots a{position:relative;display:flex}
+.snav-dots a::before{content:"";position:absolute;inset:-6px}
+.snav-dots span{display:block;width:6px;height:6px;border-radius:999px;background:var(--sn-ink);opacity:.3;scale:0;transition:scale .9s var(--xp) var(--d,0ms),transform .4s var(--xp)}
+.snav.on .snav-dots span{scale:1}
+.snav-dots a:hover span{transform:scale(1.5)}
+.snav-dots .bk{font-size:12px;line-height:1;color:var(--sn-ink);font-weight:600;padding:1px 0 3px;border-bottom:1px solid color-mix(in srgb,var(--sn-ink) 25%,transparent)}
+.snav-labels{position:absolute;top:50%;right:100%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:flex-end;gap:6px;padding-right:12px;list-style:none;margin:0;pointer-events:none}
+.snav:hover .snav-labels,.snav:focus-within .snav-labels{pointer-events:auto}
+.snav-labels a{display:block;font-family:var(--sans);font-size:13px;line-height:18px;padding:2px 10px;border-radius:999px;white-space:nowrap;background:var(--sn-bg);box-shadow:var(--sn-sh);color:color-mix(in srgb,var(--sn-ink) 70%,transparent);opacity:0;translate:4px 0;transition:opacity .4s var(--cb),translate .4s var(--cb),color .4s var(--cb);transition-delay:var(--d,0ms)}
+.snav:hover .snav-labels a,.snav:focus-within .snav-labels a{opacity:1;translate:0 0}
+.snav-labels a:hover,.snav-labels a:focus-visible,.snav-labels a[aria-current]{color:var(--sn-ink)}
+.snav-labels a.back{background:var(--night);color:var(--night-ink)}
+section[id]{scroll-margin-top:60px}
+@media(max-width:900px){.snav{display:none}}
+@media(prefers-reduced-motion:reduce){.snav-labels a{translate:0 0}}
+
+.bigq{font-family:var(--hand);font-weight:500;font-size-adjust:.5;font-size:clamp(26px,2.6vw,36px);line-height:1.08;margin:-6px 0 22px;padding:14px 18px;border-left:4px solid var(--sand,#f3dfa6);background:color-mix(in srgb,var(--night) 35%,transparent);border-radius:0 16px 16px 0;max-width:24ch}
+.bigq .label{display:block;font-family:var(--mono);font-size:11px;margin-bottom:6px}
+.bigq em{font-style:normal;color:var(--sand,#f3dfa6)}
+
+.num.fast b{color:var(--sand,#f3dfa6)}
+.num.fast b small{font-size:.38em;margin-left:.12em;letter-spacing:.02em}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="wrap">
+    <a class="back" href="index.html#work">← All work</a>
+    <a class="wordmark" href="index.html" aria-label="Expressed Intent — home">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10.5" fill="none" stroke="currentColor" stroke-width="1.4"/><rect x="7" y="7" width="10" height="10" fill="currentColor"/><rect x="18.5" y="15" width="2" height="6" fill="var(--accent)"/></svg>
+      <span>Expressed Intent</span>
+    </a>
+    <a class="pill" href="index.html#contact">Start a project</a>
+  </div>
+</header>
+
+<nav class="snav" aria-label="Sections">
+  <ul class="snav-dots" aria-hidden="true"><li><a href="index.html#work" tabindex="-1"><span class="bk" style="width:auto;height:auto;opacity:1;background:none;border-radius:0">←</span></a></li><li><a href="#why" tabindex="-1" style="--d:150ms"><span></span></a></li><li><a href="#hard" tabindex="-1" style="--d:210ms"><span></span></a></li><li><a href="#free" tabindex="-1" style="--d:270ms"><span></span></a></li><li><a href="#decisions" tabindex="-1" style="--d:330ms"><span></span></a></li><li><a href="#pick" tabindex="-1" style="--d:390ms"><span></span></a></li><li><a href="#fun" tabindex="-1" style="--d:450ms"><span></span></a></li><li><a href="#themes" tabindex="-1" style="--d:510ms"><span></span></a></li><li><a href="#link" tabindex="-1" style="--d:570ms"><span></span></a></li><li><a href="#android" tabindex="-1" style="--d:630ms"><span></span></a></li><li><a href="#timeline" tabindex="-1" style="--d:690ms"><span></span></a></li><li><a href="#stack" tabindex="-1" style="--d:750ms"><span></span></a></li></ul>
+  <ul class="snav-labels"><li><a class="back" href="index.html#work" style="--d:0ms">← Back to work</a></li><li><a href="#why" style="--d:30ms">Why</a></li><li><a href="#hard" style="--d:60ms">The hard part</a></li><li><a href="#free" style="--d:90ms">Free by design</a></li><li><a href="#decisions" style="--d:120ms">Decisions</a></li><li><a href="#pick" style="--d:150ms">Pick a Spot</a></li><li><a href="#fun" style="--d:180ms">Fun on purpose</a></li><li><a href="#themes" style="--d:210ms">Color themes</a></li><li><a href="#link" style="--d:240ms">A link, not an app</a></li><li><a href="#android" style="--d:270ms">Why no Android</a></li><li><a href="#timeline" style="--d:300ms">Timeline</a></li><li><a href="#stack" style="--d:330ms">Stack</a></li></ul>
+</nav>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="rv">
+        <img class="hero-icon" src="images/pinthereel-icon.jpg" alt="Map the Reel app icon">
+        <span class="label">Case study · 2026 · iPhone + web</span>
+        <h1>Map the<br>Reel</h1>
+        <p class="tag">Every place from every reel, on your map.</p>
+        <p class="bigq"><span class="label">The question</span><em>Accurate.</em> <em>Free.</em> <em>Effortless.</em> Can we have all three?</p>
+        <span class="label goals-lbl">Goals</span><ul class="goals"><li>Turn any saved reel into real places on your own map</li><li>Stay free for everyone — the AI runs on the phone</li><li>Be right: every pin verified, nothing pinned without you</li><li>Make picking a spot with friends fun — no app needed to vote</li></ul>
+        <div class="stores">
+          <span class="store apple soon"><b><svg viewBox="3 3 18 18" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M13.1 5.2 5.6 18.1M10.9 5.2l7.3 12.6M4.9 14h9.4M16.4 14h2.7"/></svg></b><div><small>In review</small><span>App Store</span></div><i></i></span>
+          <a class="store web" href="https://mapthereel.com" target="_blank" rel="noopener"><b><svg viewBox="0 0 24 24" fill="none" stroke="#14211f" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18"/></svg></b><div><small>Visit</small><span>mapthereel.com</span></div></a>
+        </div>
+      </div>
+      <div class="fan rv" aria-hidden="true">
+        <img src="images/mtr/store-03-worth-the-trip.jpg" alt="">
+        <img src="images/mtr/store-02-every-place.jpg" alt="">
+        <img src="images/mtr/store-05-check-it.jpg" alt="">
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="nums rv">
+      <div class="num fast"><b>3<small>days</small></b><span>first prototype → App Store review</span></div>
+      <div class="num"><b>14<small style="font-size:.38em;margin-left:.12em">builds</small></b><span>to App Store review</span></div>
+    </div>
+  </div>
+
+  <!-- STORY -->
+  <section id="why">
+    <div class="wrap">
+      <span class="label">01 — Why</span>
+      <p class="quote rv" style="margin-top:18px">“You saved that taco reel three weeks ago. <em>You'll never find it again.</em>”</p>
+      <p class="label quote-by rv">Saved folders are where good restaurant tips go to die</p>
+
+      <div class="lost">
+        <div class="saved rv" aria-label="Before: a saved folder full of reels you can't search">
+          <div class="bar-top"><span>Saved · 312</span><span>Food?</span></div>
+          <div class="grid">
+            <div style="background-image:url(images/mtr/stock-burrito.jpg)"></div><div style="background-image:url(images/mtr/stock-latte.jpg)"></div><div style="background-image:url(images/mtr/stock-ramen.jpg)"></div>
+            <div style="background-image:url(images/mtr/stock-dining.jpg)"></div><div style="background-image:url(images/mtr/stock-ramen.jpg)"></div><div style="background-image:url(images/mtr/stock-burrito.jpg)"></div>
+            <div style="background-image:url(images/mtr/stock-latte.jpg)"></div><div style="background-image:url(images/mtr/stock-dining.jpg)"></div><div style="background-image:url(images/mtr/stock-burrito.jpg)"></div>
+          </div>
+          <span class="q a">where was that?</span><span class="q b">??</span><span class="q c">which city?</span>
+        </div>
+        <div class="arrow rv" aria-hidden="true">→</div>
+        <div class="minimap rv" aria-label="After: each place pinned on a map">
+          <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <rect width="400" height="500" fill="#efe7cf"/>
+            <path d="M0 360 C80 340 140 380 220 350 S340 300 400 320 L400 500 L0 500Z" fill="#bfe3ef"/>
+            <g stroke="#fffaf0" stroke-width="10" fill="none"><path d="M-10 120 L410 90"/><path d="M60 -10 L120 510"/><path d="M-10 250 L410 230"/><path d="M260 -10 L300 360"/></g>
+            <g stroke="#e3d8b8" stroke-width="3" fill="none"><path d="M-10 60 L410 40"/><path d="M-10 180 L410 160"/><path d="M180 -10 L210 360"/><path d="M340 -10 L370 330"/><path d="M-10 300 L410 285"/></g>
+            <rect x="140" y="140" width="80" height="70" rx="8" fill="#cfe6c4"/>
+          </svg>
+          <div class="pin" style="left:30%;top:30%;background:#d9643a">🍴<span>Taqueria</span></div>
+          <div class="pin" style="left:68%;top:24%;background:#8b6a4f">☕<span>Café</span></div>
+          <div class="pin" style="left:52%;top:52%;background:#c46a8b">🧁<span>Bakery</span></div>
+          <div class="pin" style="left:22%;top:62%;background:#5a4a9b">🍷<span>Rooftop bar</span></div>
+        </div>
+      </div>
+
+      <div class="sh" style="margin-top:clamp(56px,7vw,96px)"><h2 class="rv">From reel to <em>pin</em></h2><p class="rv">Six steps. The AI parts run on the phone.</p></div>
+      <div class="pipe">
+        <div class="step rv"><span class="n">01</span><div class="ic" style="background:var(--yellow)">↗</div><b>Share</b><p>Any app's Share sheet, or paste a link.</p></div>
+        <div class="step rv"><span class="n">02</span><div class="ic" style="background:var(--pink)">💬</div><b>Read</b><p>Caption, location tags, tagged accounts.</p></div>
+        <div class="step rv dev"><span class="n">03</span><div class="ic" style="background:var(--teal)">🎧</div><b>Watch</b><p>Optional video: speech + on-screen text.</p><span class="tagd">On device</span></div>
+        <div class="step rv dev"><span class="n">04</span><div class="ic" style="background:#cbb8f0">✦</div><b>Find</b><p>Apple Intelligence pulls out the names; a web search helps when the caption is vague.</p><span class="tagd">On device</span></div>
+        <div class="step rv"><span class="n">05</span><div class="ic" style="background:#ffffff">📍</div><b>Locate</b><p>Apple Maps search, checked against the reel's city.</p></div>
+        <div class="step rv"><span class="n">06</span><div class="ic" style="background:var(--berry);color:#fff">✓</div><b>You pick</b><p>Untick what you'd never go to. Pin the rest.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HARD PART -->
+  <section class="band" id="hard">
+    <div class="wrap">
+      <div class="sh"><h2 class="rv">The hard part was <em>being right</em></h2><p class="rv">Reels hide their places everywhere. Free tools, stacked, dig until one turns up — then prove it.</p></div>
+      <div class="cases two">
+        <div class="case rv"><span class="lbl">Trap 1</span><p class="said">A Vancouver food reel, no city in the caption</p>
+          <div class="row bad"><b>✕</b><span>AI guesses San Francisco</span></div>
+          <div class="row good"><b>✓</b><span>The reel's own hashtags + handle decide the city</span></div></div>
+        <div class="case rv"><span class="lbl">Trap 2</span><p class="said">“The Berkeley” — a bar in London</p>
+          <div class="row bad"><b>✕</b><span>Searches Berkeley, California</span></div>
+          <div class="row good"><b>✓</b><span>A town inside a venue's name is never a place to look</span></div></div>
+      </div>
+
+      <h3 class="sub rv">Under the hood: <em>one reel, every layer</em></h3>
+      <div class="dig">
+        <div class="layers left">
+          <div class="ly rv"><span class="tool">Vision OCR · on device</span><b>Cover, first frame, every slide</b><code>“Waterbar 📍 San Francisco”</code></div>
+          <div class="ly rv"><span class="tool">Caption parser</span><b>📍 tags + street addresses</b><code>“📍 Al Carajo”  “868 E Hastings”</code></div>
+          <div class="ly rv"><span class="tool">Profile lookup</span><b>Tagged @accounts → real names</b><code>@shoji_sf → “Shoji”</code></div>
+          <div class="ly rv"><span class="tool">Apple Maps · nearby</span><b>Hashtags that name a venue</b><code>#waterbar → food venue in SF?</code></div>
+        </div>
+        <div class="reelcard rv" aria-hidden="true">
+          <div class="rc-img" style="background-image:url(images/mtr/stock-ramen.jpg)"><span class="rc-ocr">BEST RAMEN IN SF 📍</span><span class="rc-play">▶</span></div>
+          <div class="rc-body"><b>@foodie_sf</b> must-try spot 🍜 📍 tagged @shoji_sf <span>#sanfrancisco #ramen #waterbar</span></div>
+          <div class="rc-scan"></div>
+        </div>
+        <div class="layers right">
+          <div class="ly rv"><span class="tool">Platform suggestions</span><b>What people search for this post</b><code>“waterbar restaurant sf”</code></div>
+          <div class="ly rv"><span class="tool">Speech · on device</span><b>Words said out loud</b><code>“…then Nopa, on Divisadero…”</code></div>
+          <div class="ly rv"><span class="tool">Hashtags + handle</span><b>Which city the reel is in</b><code>@foodcouver, #vancouver → Vancouver</code></div>
+          <div class="ly rv"><span class="tool">OCR + Speech</span><b>Your screenshot or recording</b><code>when the reel hides everything</code></div>
+        </div>
+      </div>
+
+      <h3 class="sub rv">Then every guess must <em>earn its pin</em></h3>
+      <div class="gates">
+        <div class="gate rv"><i>1</i><b>Real venue</b><p>Apple Maps has a food or drink place with that <u>whole</u> name, near the reel's city.</p></div>
+        <div class="gate rv"><i>2</i><b>Said in the reel</b><p>On-device AI answers only count if the name appears in the evidence.</p></div>
+        <div class="gate rv"><i>3</i><b>No invented addresses</b><p>A street the reel never mentions is dropped before it can outrank real clues.</p></div>
+        <div class="gate rv"><i>4</i><b>Reel's city wins</b><p>Over any city the AI assumes.</p></div>
+        <div class="gate rv"><i>5</i><b>One pin per place</b><p>Same name and city, or the same spot: merged, every reel attached.</p></div>
+        <div class="gate done rv"><i>📍</i><b>Pinned</b><p>Only now does it reach your map — and you still tick it first.</p></div>
+      </div>
+
+      <h3 class="sub rv">Example: <em>a TikTok with no useful caption</em></h3>
+      <div class="trace rv">
+        <div class="tr"><span class="lbl">Caption</span><p>“this place 🤤🦪 #waterbar”</p><small>No name in words</small></div>
+        <div class="tr"><span class="lbl">First frame · OCR</span><p>“Waterbar 📍 San Francisco”</p><small>Name + city found</small></div>
+        <div class="tr"><span class="lbl">#waterbar · Apple Maps</span><p>Waterbar, seafood · SF</p><small>Venue confirmed nearby</small></div>
+        <div class="tr"><span class="lbl">Suggested search</span><p>“waterbar restaurant sf”</p><small>Agrees</small></div>
+        <div class="tr ok"><span class="lbl">Result</span><p>📍 Waterbar</p><small>$0 · no cloud AI used</small></div>
+      </div>
+      <div class="hardnums rv">
+        <div><b>~10k</b><span>lines of Swift</span></div>
+        <div><b>30</b><span>source files</span></div>
+        <div><b>1 rule</b><span>the reel's own words beat any guess</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FREE BY DESIGN -->
+  <section id="free">
+    <div class="wrap">
+      <div class="sh"><h2 class="rv">Free <em>by design</em></h2><p class="rv">No subscription, no per-reel bill. The pattern: cheapest signal first, stop the moment a place is found.</p></div>
+      <div class="fall">
+        <div class="tiers">
+          <div class="tier rv"><span class="k" style="background:var(--yellow)">0</span><div><b>Exact signals</b><small>📍 tags, tagged accounts, text on the picture, hashtags, addresses</small></div><span class="cost">$0 · instant</span></div>
+          <div class="tier rv"><span class="k" style="background:#cbb8f0">1</span><div><b>Apple Intelligence</b><small>Reads the caption and video on the iPhone</small></div><span class="cost">$0 · on device</span></div>
+          <div class="tier rv"><span class="k" style="background:var(--teal)">2</span><div><b>Web search</b><small>One lookup on our server, results read on the phone</small></div><span class="cost">$0 to you</span></div>
+          <div class="tier rv"><span class="k" style="background:var(--pink)">3</span><div><b>The poster</b><small>When the account that posted is the place</small></div><span class="cost">$0</span></div>
+          <div class="tier rv own"><span class="k" style="background:var(--ink)">+</span><div><b>Your own AI</b><small>Optional key, off by default, cheapest model first</small></div><span class="cost own">you choose</span></div>
+        </div>
+        <div class="rv">
+          <p class="rule">Spend nothing until <em>nothing else works.</em></p>
+          <div class="rule-sub">
+            <div class="vf"><b>$0</b><span>cost to the user, always</span></div>
+            <div class="vf"><b>0</b><span>paid AI calls by default</span></div>
+            <div class="vf"><b>On&nbsp;phone</b><span>where the AI reading happens</span></div>
+            <div class="vf"><b>Cheap</b><span>server: search + votes only</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DECISIONS -->
+  <section class="band" id="decisions">
+    <div class="wrap">
+      <div class="sh"><h2 class="rv">Six calls that <em>shaped it</em></h2><p class="rv">Each one trades a little cleverness for trust.</p></div>
+      <div class="dgrid">
+        <article class="dc rv">
+          <div class="vis"><div class="safe">
+            <div>Place names <b>APPLE INTELLIGENCE</b></div>
+            <div>Speech in a video <b>ON DEVICE</b></div>
+            <div>Text on screen <b>ON DEVICE</b></div>
+          </div></div>
+          <span class="why">Factor · free + private</span>
+          <h3>On-device first</h3>
+          <p>The AI reading runs on the iPhone, so there's no per-reel AI bill and your saves stay yours.</p>
+        </article>
+        <article class="dc rv">
+          <div class="vis"><div style="text-align:center"><div class="noad">LOGIN</div><div class="free">open it, use it</div></div></div>
+          <span class="why">Factor · zero friction</span>
+          <h3>No account</h3>
+          <p>Your places live on your phone. Nothing to sign up for, nothing to leak.</p>
+        </article>
+        <article class="dc rv">
+          <div class="vis"><div class="chips"><span class="chip on">✓ La Taqueria</span><span class="chip on">✓ El Farolito</span><span class="chip" style="opacity:.55;text-decoration:line-through">Random gas station</span></div></div>
+          <span class="why">Factor · AI can be wrong</span>
+          <h3>You confirm every pin</h3>
+          <p>Nothing lands on the map until you tick it. Add a place yourself in one search.</p>
+        </article>
+        <article class="dc rv">
+          <div class="vis"><div style="text-align:center"><div class="chips" style="margin-bottom:12px"><span class="chip">“El Farolito, SF”</span></div><span class="chip on" style="display:inline-block">Apple Maps · 2779 Mission St</span></div></div>
+          <span class="why">Factor · trust the map</span>
+          <h3>Real addresses only</h3>
+          <p>Every guess is checked against Apple Maps and the reel's city. One pin per place.</p>
+        </article>
+        <article class="dc rv">
+          <div class="vis"><div style="text-align:center"><div class="tap" style="background:var(--berry)">VOTE</div><div class="where"><span>Any browser</span><span>No app</span><span>No sign-up</span></div></div></div>
+          <span class="why">Factor · group-chat indecision</span>
+          <h3>Pick a Spot</h3>
+          <p>Friends vote from a link. Only the host needs the app.</p>
+        </article>
+        <article class="dc rv">
+          <div class="vis"><div class="chips"><span class="chip">Claude</span><span class="chip">ChatGPT</span><span class="chip">Gemini</span><span class="chip on">Off by default</span></div></div>
+          <span class="why">Factor · power without a paywall</span>
+          <h3>Bring your own AI</h3>
+          <p>Optional key, kept in the Keychain, sent only to that provider.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- PICK A SPOT -->
+  <section id="pick">
+    <div class="wrap">
+      <div class="sh"><h2 class="rv">Where are we <em>eating?</em></h2><p class="rv">The question every saved reel eventually becomes.</p></div>
+      <div class="vote">
+        <div class="vcard rv" aria-label="Example vote: three saved places with live results">
+          <span class="label" style="color:#4a5680">Pick a Spot · 4 friends voted</span>
+          <h4>Friday dinner</h4>
+          <p class="who">From your map · votes close in 3 days</p>
+          <div class="opt o1 win"><i></i><span>🌮 La Taqueria</span><small>3</small></div>
+          <div class="opt o2"><i></i><span>🍜 Ramen spot</span><small>2</small></div>
+          <div class="opt o3"><i></i><span>🍷 Rooftop bar</span><small>1</small></div>
+          <div class="on">It's on · Fri 7:30 PM</div>
+        </div>
+        <div class="vfacts">
+          <div class="vf rv"><b>2–6</b><span>saved places per vote</span></div>
+          <div class="vf rv"><b>0</b><span>apps or sign-ups for friends</span></div>
+          <div class="vf rv"><b>Live</b><span>votes stream in as they land</span></div>
+          <div class="vf rv"><b>3 days</b><span>then the vote deletes itself</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- FUN -->
+  <section class="band" id="fun">
+    <div class="wrap">
+      <div class="sh"><h2 class="rv">Deciding dinner <em>should be fun</em></h2><p class="rv">The vote is a tiny game. Every step gives you a little reward.</p></div>
+      <div class="fun">
+        <div class="vphone rv" id="vphone" aria-label="Animated vote page: glowing while voting, green once voted, confetti when the plan is set">
+          <span class="glow g1"></span><span class="glow g2"></span><span class="glow g3"></span>
+          <div class="vp">
+            <span class="lbl2">Pick a spot · from Sam</span>
+            <span class="t">Friday dinner</span>
+            <div class="card2"><div class="pl on"><i>✓</i>🌮 La Taqueria</div><div class="pl"><i></i>🍜 Ramen spot</div><div class="pl on"><i>✓</i>🍷 Rooftop bar</div></div>
+            <div class="card2"><span class="lbl2">When works?</span>
+              <table><tr><td></td><td>Fri 7</td><td>Sat 1</td><td>Sun 6</td></tr>
+              <tr><td>Ana</td><td class="y best">yes</td><td class="m">maybe</td><td class="n">no</td></tr>
+              <tr><td>Jo</td><td class="y best">yes</td><td class="y">yes</td><td class="miss">?</td></tr>
+              <tr><td>You</td><td class="y best">yes</td><td class="n">no</td><td class="m">maybe</td></tr></table></div>
+            <div class="itson"><span class="lbl2" style="opacity:.9">🏆 It's on</span><b>La Taqueria</b>Fri · 7:00 PM<div class="btns"><span>Add to calendar</span><span>Directions</span></div></div>
+          </div>
+          <div class="confetti"><i style="left:8%;background:#FAD447;--dx:40px;--dy:-420px;--r:540deg;animation-delay:0s"></i><i style="left:12%;background:#F06C93;--dx:90px;--dy:-360px;--r:-420deg;animation-delay:0.05s"></i><i style="left:18%;background:#8FE39B;--dx:-20px;--dy:-470px;--r:600deg;animation-delay:0.1s"></i><i style="left:50%;background:#F4B183;--dx:-60px;--dy:-480px;--r:500deg;animation-delay:0s"></i><i style="left:50%;background:#3DB89F;--dx:70px;--dy:-430px;--r:-520deg;animation-delay:0.06s"></i><i style="left:52%;background:#fff;--dx:-110px;--dy:-380px;--r:420deg;animation-delay:0.12s"></i><i style="left:86%;background:#FAD447;--dx:-80px;--dy:-450px;--r:-560deg;animation-delay:0.02s"></i><i style="left:90%;background:#F06C93;--dx:-30px;--dy:-400px;--r:480deg;animation-delay:0.08s"></i><i style="left:82%;background:#8FE39B;--dx:-140px;--dy:-360px;--r:-400deg;animation-delay:0.14s"></i><i style="left:30%;background:#fff;--dx:30px;--dy:-500px;--r:620deg;animation-delay:0.18s"></i><i style="left:70%;background:#F4B183;--dx:40px;--dy:-470px;--r:-480deg;animation-delay:0.2s"></i><i style="left:40%;background:#F06C93;--dx:-60px;--dy:-420px;--r:380deg;animation-delay:0.22s"></i><i style="left:60%;background:#FAD447;--dx:90px;--dy:-390px;--r:-600deg;animation-delay:0.24s"></i><i style="left:22%;background:#3DB89F;--dx:120px;--dy:-410px;--r:520deg;animation-delay:0.26s"></i><i style="left:76%;background:#fff;--dx:-120px;--dy:-440px;--r:-500deg;animation-delay:0.28s"></i><i style="left:46%;background:#8FE39B;--dx:10px;--dy:-520px;--r:640deg;animation-delay:0.3s"></i></div>
+        </div>
+        <div>
+          <p class="funq rv">Small rewards, <em>all the way down.</em></p>
+          <div class="beats">
+            <div class="beat rv"><i style="background:#F06C93">✨</i><div><b>The page glows</b><span>Pink and orange light while you're still voting.</span></div></div>
+            <div class="beat rv"><i style="background:#3DB89F">🫶</i><div><b>Then it calms down</b><span>Vote in, and the glow slowly turns teal-green.</span></div></div>
+            <div class="beat rv"><i style="background:#FAD447">⭐</i><div><b>Best time, underlined</b><span>The time most people can make gets a gold line.</span></div></div>
+            <div class="beat rv"><i style="background:#F49BB4">👀</i><div><b>Gentle nudge</b><span>Skipped a time? That cell wiggles until you answer.</span></div></div>
+            <div class="beat rv"><i style="background:#F4B183">🏆</i><div><b>Host crowns a winner</b><span>An orange-to-pink “It's on” card with a trophy.</span></div></div>
+            <div class="beat rv"><i style="background:#8FE39B">🎉</i><div><b>Confetti cannons</b><span>Fired from the corners, over everything. Skipped with Reduce Motion.</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THEMES -->
+  <section id="themes">
+    <div class="wrap">
+      <p class="manifesto2 rv">We don't need more <s>white, boring</s> apps. <em>Crazy on purpose.</em></p>
+      <div class="themes">
+        <div class="th rv" style="background:#EFD993;color:#1F3A36"><span class="nm">Butter</span><span class="insp">Butter + raspberry</span>
+          <div class="mini" style="background:#F7E8B8"><div class="row3"><i style="background:#D9643A">🍴</i><div>La Taqueria<small>Burritos · 0.3 mi</small></div></div><div class="row3"><i style="background:#C4708C">🧁</i><div>Garden Creamery<small>Ice cream · 0.6 mi</small></div></div></div>
+          <span class="btn3" style="background:#B13C60;color:#FFF6E0">+ Reel</span><div class="swatch"><span style="background:#EFD993"></span><span style="background:#E4977F"></span><span style="background:#A8325A"></span><span style="background:#1F3A36"></span></div></div>
+        <div class="th rv" style="background:linear-gradient(160deg,#CFF2C4,#B8F59A);color:#0B1F0E"><span class="nm">Mint</span><span class="insp">Mint, black + neon</span>
+          <div class="mini" style="background:#E9FBE3"><div class="row3"><i style="background:#5E4B8B">🍷</i><div>Park Bar<small>Rooftop · 1.2 mi</small></div></div><div class="row3"><i style="background:#286273">⭐</i><div>Viewpoint<small>Sunset · 2 mi</small></div></div></div>
+          <span class="btn3" style="background:#0B0B0B;color:#B8F59A">+ Reel</span><div class="swatch"><span style="background:#CFF2C4"></span><span style="background:#B8F59A"></span><span style="background:#146B2A"></span><span style="background:#0B0B0B"></span></div></div>
+        <div class="th rv" style="background:#1C2647;color:#F6D8BE"><span class="nm">Night</span><span class="insp">Navy + warm peach</span>
+          <div class="mini" style="background:#283463"><div class="row3"><i style="background:#E39A3B">🌮</i><div>Night market<small>Street food · 0.8 mi</small></div></div><div class="row3"><i style="background:#9C3D6A">🎶</i><div>Jazz club<small>Nightlife · 1.5 mi</small></div></div></div>
+          <span class="btn3" style="background:#EFA77B;color:#1C2647">+ Reel</span><div class="swatch"><span style="background:#1C2647"></span><span style="background:#283463"></span><span style="background:#E0956A"></span><span style="background:#F6D8BE"></span></div></div>
+        <div class="th rv" style="background:#8EA3A0;color:#14211F"><span class="nm">Sage</span><span class="insp">Teal + deep green</span>
+          <div class="mini" style="background:#7A918D"><div class="row3"><i style="background:#8B6A4F">☕</i><div>Corner café<small>Coffee · 0.2 mi</small></div></div><div class="row3"><i style="background:#4E8B5A">🌳</i><div>Dolores Park<small>Picnic · 0.9 mi</small></div></div></div>
+          <span class="btn3" style="background:#1B2A28;color:#F3EFE2">+ Reel</span><div class="swatch"><span style="background:#8EA3A0"></span><span style="background:#286273"></span><span style="background:#082C36"></span><span style="background:#1B2A28"></span></div></div>
+      </div>
+      <div class="hardnums rv"><div><b>4</b><span>themes, one tap in Settings</span></div><div><b>13</b><span>category colors on every map</span></div><div><b>0</b><span>white screens</span></div></div>
+    </div>
+  </section>
+
+  <!-- WEB VOTE DECISION -->
+  <section class="band" id="link">
+    <div class="wrap">
+      <div class="sh"><h2 class="rv">A link, <em>not an app</em></h2><p class="rv">Only the host needs Map the Reel. Everyone else votes from a web page.</p></div>
+      <div class="opts">
+        <div class="optc rv"><span class="verdict no">Rejected</span><div class="vis2">📲</div><h3>Make friends install</h3>
+          <ul><li class="x"><b>✕</b>Nobody installs an app to vote on dinner</li><li class="x"><b>✕</b>Leaves out Android friends</li><li class="x"><b>✕</b>Needs accounts to match votes</li></ul></div>
+        <div class="optc rv"><span class="verdict no">Rejected</span><div class="vis2">💬</div><h3>Group-chat poll</h3>
+          <ul><li class="x"><b>✕</b>No map, no photos, no times</li><li class="x"><b>✕</b>Different in every chat app</li><li class="x"><b>✕</b>Result never reaches the app</li></ul></div>
+        <div class="optc pick rv"><span class="verdict yes">Chosen</span><div class="vis2"><span class="devices">📱💻🤖</span></div><h3>A web link</h3>
+          <ul><li class="v"><b>✓</b>Opens in any browser, any phone</li><li class="v"><b>✓</b>No install, no sign-in</li><li class="v"><b>✓</b>Votes flow back to the host's app live</li></ul></div>
+      </div>
+      <div class="flow">
+        <div class="fs rv"><span class="who">Host · iPhone app</span><div class="em">📍</div><b>Pick 2–6 places</b><p>From saved pins, plus a few times.</p></div>
+        <div class="fs rv"><span class="who">Host</span><div class="em">🔗</div><b>Share a link</b><p>Any chat. The link is the whole invite.</p></div>
+        <div class="fs web rv"><span class="who">Friends · any browser</span><div class="em">🗳️</div><b>Vote</b><p>Name, pick, done. No app.</p></div>
+        <div class="fs rv"><span class="who">Host · iPhone app</span><div class="em">🏆</div><b>Pick the winner</b><p>Watches votes live, sets place + time.</p></div>
+        <div class="fs web rv"><span class="who">Everyone</span><div class="em">📅</div><b>It's on</b><p>Calendar invite + directions. Gone in 3 days.</p></div>
+      </div>
+      <div class="logic">
+        <div class="lg rv"><span class="t">Identity</span><p class="q">No accounts — so how are votes counted once?</p><p class="a">A name is required. The same name from another browser asks “Is that you?” before replacing the vote.</p></div>
+        <div class="lg rv"><span class="t">Control</span><p class="q">Who gets to decide?</p><p class="a">Each vote has a private host key. Only the host's app can pick the winner.</p></div>
+        <div class="lg rv"><span class="t">Closure</span><p class="q">When is it over?</p><p class="a">Voting closes the moment the plan is set. No late votes reshuffling dinner.</p></div>
+        <div class="lg rv"><span class="t">Follow-through</span><p class="q">How do people actually show up?</p><p class="a">One tap to add it to Apple or Google Calendar, and directions in the right maps app.</p></div>
+        <div class="lg rv"><span class="t">Live</span><p class="q">Does the host have to refresh?</p><p class="a">Votes stream in on their own while the host watches.</p></div>
+        <div class="lg rv"><span class="t">Privacy</span><p class="q">Where does the vote live?</p><p class="a">On a tiny server for 3 days, then it deletes itself.</p></div>
+        <div class="lg rv"><span class="t">Every browser</span><p class="q">Will it look right everywhere?</p><p class="a">Solid cards instead of blur effects that some browsers draw badly.</p></div>
+        <div class="lg rv"><span class="t">Accessibility</span><p class="q">Confetti for everyone?</p><p class="a">Celebration plays for the plan, skipped when Reduce Motion is on.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ANDROID -->
+  <section id="android">
+    <div class="wrap">
+      <div class="sh"><h2 class="rv">Why no <em>Android</em> app</h2><p class="rv">Free depends on the phone doing the AI. Today, only one platform gives that away.</p></div>
+      <div class="andro">
+        <div class="cmp rv">
+          <div>The job</div><div>iPhone</div><div>Android equivalent</div>
+          <div class="what">Read place names</div><div class="ok">Apple Intelligence, on device</div><div class="cost">Cloud AI per reel</div>
+          <div class="what">Hear the video</div><div class="ok">Speech, on device</div><div class="cost">Cloud speech-to-text</div>
+          <div class="what">Read on-screen text</div><div class="ok">Vision, on device</div><div class="ok">On device too</div>
+          <div class="what">Check every pin</div><div class="ok">Apple Maps + Look Around</div><div class="cost">Paid maps API</div>
+          <div class="what">Grab from any app</div><div class="ok">Share extension</div><div class="ok">Share intent</div>
+        </div>
+        <div class="verdict2 rv">
+          <p class="rule">Free on iPhone. <em>A bill</em> on Android.</p>
+          <p>Every reel would cost money to read. That breaks the one promise the app makes, so Android waits until it can be free too.</p>
+          <div class="stillv">🤖 Android friends still vote — the web link works in any browser.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIMELINE -->
+  <section class="band" id="timeline">
+    <div class="wrap">
+      <div class="sh"><h2 class="rv">From a Mac to <em>the App Store</em></h2><p class="rv">Web prototype in the morning, native by the afternoon, submitted the next day.</p></div>
+      <div class="track" id="track">
+        <div class="ms"><time>Nov 13</time><b>Web prototype</b><p>Node server + Leaflet map on a Mac, Claude reading captions.</p></div>
+        <div class="ms"><time>Nov 13</time><b>iPhone app</b><p>SwiftUI + MapKit, plus a Share extension.</p></div>
+        <div class="ms"><time>Nov 14</time><b>Pin → Map</b><p>“Pin the Reel” becomes Map the Reel and mapthereel.com.</p></div>
+        <div class="ms"><time>Nov 14</time><b>1.0 submitted</b><p>App, share extension, server and store assets.</p></div>
+        <div class="ms"><time>Nov 14</time><b>Pick a Spot</b><p>Group votes on saved places, place notes, tests.</p></div>
+        <div class="ms"><time>Nov 15</time><b>One pin per place</b><p>Merges duplicates, better search, host picks a winner.</p></div>
+        <div class="ms big"><time>Nov 15</time><b>Build 14</b><p>In App Store review.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STACK -->
+  <section id="stack">
+    <div class="wrap">
+      <div class="sh"><h2 class="rv">Native app, <em>tiny server</em></h2><p class="rv">The phone does the thinking. The server only searches and holds votes.</p></div>
+      <div class="bar rv" id="bar"><div class="sw2">Swift · 80%</div><div class="js">JS · 20%</div></div>
+      <div class="stack-cols">
+        <div class="sc rv"><span class="label">iPhone</span><h4>Swift</h4><div class="chips"><span class="chip">SwiftUI</span><span class="chip">MapKit + Look Around</span><span class="chip">Share extension</span><span class="chip">Foundation Models</span><span class="chip">Vision</span><span class="chip">Speech</span></div></div>
+        <div class="sc rv"><span class="label">Server</span><h4>Cloudflare</h4><div class="chips"><span class="chip">Workers</span><span class="chip">D1 votes</span><span class="chip">Web search</span><span class="chip">Vote pages</span></div></div>
+        <div class="sc rv"><span class="label">Optional</span><h4>Your AI</h4><div class="chips"><span class="chip">Claude</span><span class="chip">ChatGPT</span><span class="chip">Gemini</span><span class="chip">Keychain</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- END -->
+  <section class="band end">
+    <div class="wrap">
+      <p class="quote rv">Your saved folder can <em>finally retire.</em></p>
+      <div class="stores rv">
+        <a class="store web" href="https://mapthereel.com" target="_blank" rel="noopener"><b><svg viewBox="0 0 24 24" fill="none" stroke="#14211f" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18"/></svg></b><div><small>Coming soon to the App Store</small><span>mapthereel.com</span></div></a>
+      </div>
+      <div class="next">
+        <a href="index.html#work"><span class="label">← Back</span><b>All work</b></a>
+        <a href="nugget-log.html" style="text-align:right"><span class="label">Previous project</span><b>Nugget Log →</b></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap"><span>© 2026 Expressed Intent, a Side Table LLC company</span><a href="index.html">expressedintent.com</a></div></footer>
+
+<script>
+(() => {
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), {threshold:.15});
+  document.querySelectorAll('.rv, #track, #bar').forEach(el => io.observe(el));
+  const vp=document.getElementById('vphone');
+  if(vp){const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const run=()=>{vp.classList.remove('voted','final');setTimeout(()=>vp.classList.add('voted'),1400);setTimeout(()=>vp.classList.add('final'),3200);};
+    const vio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){ if(reduce){vp.classList.add('voted','final');} else {run(); vp._t=setInterval(run,7000);} vio.disconnect();}}),{threshold:.35});
+    vio.observe(vp);}
+
+})();
+
+// side section nav: dots grow with scroll (same behaviour as the main page)
+(() => {
+  const nav = document.querySelector('.snav'); if (!nav) return;
+  const ids = [...nav.querySelectorAll('.snav-labels a:not(.back)')].map(a => a.getAttribute('href').slice(1));
+  const secs = ids.map(id => document.getElementById(id));
+  const dots = [...nav.querySelectorAll('.snav-dots span:not(.bk)')], labels = [...nav.querySelectorAll('.snav-labels a:not(.back)')];
+  let raf = 0;
+  const update = () => {
+    raf = 0; const line = innerHeight * .5; let f = 0;
+    secs.forEach((el,i) => { if (!el) return; const r = el.getBoundingClientRect(), c = r.top + r.height / 2; if (c <= line) f = i + Math.min(1, (line - c) / Math.max(1, (secs[i+1] ? secs[i+1].getBoundingClientRect().top + secs[i+1].offsetHeight / 2 : c + r.height) - c)); });
+    f = Math.max(0, Math.min(ids.length - 1, f));
+    dots.forEach((d,k) => { const w = Math.max(0, 1 - Math.abs(f - k)); d.style.height = (6 + 18*w).toFixed(2) + 'px'; d.style.opacity = (.3 + .7*w).toFixed(3); });
+    const cur = Math.round(f);
+    labels.forEach((a,k) => k === cur ? a.setAttribute('aria-current','location') : a.removeAttribute('aria-current'));
+    const on = scrollY > innerHeight * .2;
+    nav.classList.toggle('on', on); on ? nav.removeAttribute('inert') : nav.setAttribute('inert','');
+  };
+  const req = () => { if (!raf) raf = requestAnimationFrame(update); };
+  addEventListener('scroll', req, {passive:true}); addEventListener('resize', req); update();
+})();
+</script>
+</body>
+</html>

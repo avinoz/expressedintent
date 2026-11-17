@@ -460,6 +460,8 @@ main,footer{position:relative}
 .hs-link{display:inline-block;margin-top:10px;font-size:14px;border-bottom:1px solid currentColor;color:var(--ink)}
 .hs-link:hover{color:var(--accent)}
 .hs-links{display:flex;flex-wrap:wrap;gap:6px 22px}
+.hs-link--story{color:var(--sand,#f3dfa6);border-color:currentColor}
+.hs-col h3 a:hover{color:var(--sand,#f3dfa6)}
 @media (prefers-reduced-motion:reduce){
   .work.hs{height:auto!important;padding:clamp(56px,7vw,100px) 0}
   .hs-view{position:static;height:auto;display:block;overflow:visible}
@@ -481,8 +483,14 @@ main,footer{position:relative}
 .hs-phone.is-empty .label{color:color-mix(in srgb,var(--night-ink) 60%,transparent)}
 .hs-phone.is-empty em{font-family:var(--serif);font-style:italic;font-weight:300;font-size:clamp(20px,1.8vw,26px);color:var(--accent);font-size-adjust:.5;font-weight:500}
 .hs-col.in .hs-icon:hover,.hs-col.in .hs-phone:hover{transform:translateY(-6px)}
+/* icon + screenshot act as one button to the project page */
+.hs-shot{display:contents;cursor:pointer}
+.hs-col.in .hs-shot:hover .hs-icon,.hs-col.in .hs-shot:hover .hs-phone,.hs-col.in .hs-shot:focus-visible .hs-icon,.hs-col.in .hs-shot:focus-visible .hs-phone{transform:translateY(-6px)}
+.hs-shot:focus-visible .hs-phone{outline:3px solid var(--sand,#f3dfa6);outline-offset:4px}
+.hs-shot-cta{position:absolute;z-index:3;left:calc(var(--ic) * .78 + 14px);bottom:9%;padding:9px 14px;border-radius:999px;background:var(--pill-bg,#fbfaf4);color:var(--pill-ink,#14211f);font-size:13px;font-weight:500;white-space:nowrap;box-shadow:0 14px 26px -12px rgba(10,20,18,.55);opacity:0;transform:translateY(8px);transition:opacity .3s var(--ease),transform .4s var(--ease);pointer-events:none}
+@media (hover:hover){.hs-shot:hover .hs-shot-cta,.hs-shot:focus-visible .hs-shot-cta{opacity:1;transform:none}}
 /* store availability tiles, bottom-right of the phone */
-.hs-stores{position:absolute;right:0;bottom:5%;z-index:3;display:flex;align-items:flex-start;opacity:0;transform:translateY(24px);transition:opacity .6s var(--ease) .35s,transform .8s var(--ease) .35s}
+.hs-stores{position:absolute;right:0;bottom:5%;z-index:4;display:flex;align-items:flex-start;opacity:0;transform:translateY(24px);transition:opacity .6s var(--ease) .35s,transform .8s var(--ease) .35s}
 .hs-col.in .hs-stores{opacity:1;transform:none}
 .hs-store{--s:clamp(54px,4.6vw,70px);display:flex;flex-direction:column;align-items:center;gap:8px;text-decoration:none;position:relative}
 .hs-store+.hs-store{margin-left:calc(var(--s) * -.12);margin-top:calc(var(--s) * .5);z-index:1}
@@ -802,25 +810,26 @@ section.card-sec>.wrap{max-width:calc(var(--max) - var(--g));background:var(--ba
           </article>
           <article class="hs-col">
             <div class="label hs-meta"><span>03 / Mobile</span><span>App Store · Google Play</span></div>
-            <h3>Nugget Log</h3>
-            <div class="hs-tiles hs-tiles--app hs-tiles--stores"><img class="hs-icon" src="images/nuggetlog-icon.jpg?v=3" alt="Nugget Log app icon" loading="lazy"><img class="hs-phone" src="images/nuggetlog-shot.jpg" alt="Nugget Log Today screen tracking sleep, feeds and diapers" loading="lazy"><div class="hs-stores" aria-label="Available on iOS and Android">
+            <h3><a href="nugget-log.html">Nugget Log</a></h3>
+            <div class="hs-tiles hs-tiles--app hs-tiles--stores"><a class="hs-shot" href="nugget-log.html" aria-label="Nugget Log — project details"><img class="hs-icon" src="images/nuggetlog-icon.jpg?v=3" alt="Nugget Log app icon" loading="lazy"><img class="hs-phone" src="images/nuggetlog-shot.jpg" alt="Nugget Log Today screen tracking sleep, feeds and diapers" loading="lazy"><span class="hs-shot-cta" aria-hidden="true">Project details →</span></a><div class="hs-stores" aria-label="Available on iOS and Android">
               <a class="hs-store hs-store--apple" href="https://apps.apple.com/us/app/nugget-log/id6800586307" target="_blank" rel="noopener" aria-label="Nugget Log on the App Store (live)"><b><svg viewBox="3 3 18 18" aria-hidden="true"><path d="M13.1 5.2 5.6 18.1M10.9 5.2l7.3 12.6M4.9 14h9.4M16.4 14h2.7"/></svg></b><span>Live</span></a>
               <a class="hs-store hs-store--play" href="https://play.google.com/store/apps/details?id=com.nugget.log.app" target="_blank" rel="noopener" aria-label="Nugget Log on Google Play (live)"><b><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M5.4 3.3 13.6 12l-8.2 8.7c-.3-.2-.4-.6-.4-1V4.3c0-.4.1-.8.4-1z"/><path fill="#34A853" d="M5.4 3.3c.3-.3.9-.4 1.4-.1l9.7 5.6-2.9 3.2z"/><path fill="#EA4335" d="M5.4 20.7c.3.3.9.4 1.4.1l9.7-5.6-2.9-3.2z"/><path fill="#FBBC04" d="m16.5 8.8 2.9 1.7c1.1.6 1.1 2.4 0 3l-2.9 1.7-2.9-3.2z"/></svg></b><span>Live</span></a>
             </div></div>
             <div class="hs-copy">
               <p class="hs-intent">“Log the little moments, together.”</p>
               <p class="hs-tags">Live on iOS and Android — free on the App Store and Google Play</p>
-              <span class="hs-links"><a class="hs-link" href="https://apps.apple.com/us/app/nugget-log/id6800586307" target="_blank" rel="noopener">App Store →</a><a class="hs-link" href="https://play.google.com/store/apps/details?id=com.nugget.log.app" target="_blank" rel="noopener">Google Play →</a></span>
+              <span class="hs-links"><a class="hs-link hs-link--story" href="nugget-log.html">Project Details →</a><a class="hs-link" href="https://apps.apple.com/us/app/nugget-log/id6800586307" target="_blank" rel="noopener">App Store →</a><a class="hs-link" href="https://play.google.com/store/apps/details?id=com.nugget.log.app" target="_blank" rel="noopener">Google Play →</a></span>
 
             </div>
           </article>
           <article class="hs-col">
             <div class="label hs-meta"><span>04 / iOS</span><span>App Store · In review</span></div>
-            <h3>Map the Reel</h3>
-            <div class="hs-tiles hs-tiles--app"><img class="hs-icon" src="images/pinthereel-icon.jpg" alt="Map the Reel app icon" loading="lazy"><img class="hs-phone" src="images/pinthereel-shot.jpg?v=4" alt="Map the Reel showing reels to review above a map of San Francisco restaurants pinned from them" loading="lazy"></div>
+            <h3><a href="map-the-reel.html">Map the Reel</a></h3>
+            <div class="hs-tiles hs-tiles--app"><a class="hs-shot" href="map-the-reel.html" aria-label="Map the Reel — project details"><img class="hs-icon" src="images/pinthereel-icon.jpg" alt="Map the Reel app icon" loading="lazy"><img class="hs-phone" src="images/pinthereel-shot.jpg?v=4" alt="Map the Reel showing reels to review above a map of San Francisco restaurants pinned from them" loading="lazy"><span class="hs-shot-cta" aria-hidden="true">Project details →</span></a></div>
             <div class="hs-copy">
               <p class="hs-intent">“Turn the reels you save into places you actually go.”</p>
               <p class="hs-tags">Product / SwiftUI &amp; MapKit / AI place extraction</p>
+              <span class="hs-links"><a class="hs-link hs-link--story" href="map-the-reel.html">Project Details →</a></span>
 
             </div>
           </article>
