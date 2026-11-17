@@ -502,6 +502,43 @@ section[id]{scroll-margin-top:60px}
 
 .num.fast b{color:var(--sand,#f3dfa6)}
 .num.fast b small{font-size:.38em;margin-left:.12em;letter-spacing:.02em}
+
+/* ===== redesign: calm hero ===== */
+.hero2{padding:clamp(28px,5vw,64px) 0 clamp(40px,6vw,72px);overflow:hidden}
+.hero2 .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(24px,5vw,80px);align-items:center;min-height:min(80vh,780px)}
+.hero2 h1{font-family:var(--display);text-transform:uppercase;font-weight:400;font-size:clamp(56px,8.4vw,120px);line-height:.88;letter-spacing:-.005em;margin:14px 0 0}
+.hero2 .tag{font-family:var(--hand);font-weight:500;font-size-adjust:.5;font-size:clamp(28px,3.2vw,44px);line-height:1.05;margin:16px 0 30px;color:var(--sand);max-width:16ch}
+.stage{position:relative;justify-self:center;width:min(78%,300px)}
+.stage .blob{position:absolute;inset:-14% -30%;border-radius:50%;filter:blur(64px);opacity:.6;z-index:0}
+.stage .phone{position:relative;z-index:1;border-radius:44px;border:9px solid #0f1716;overflow:hidden;aspect-ratio:640/1391;box-shadow:0 50px 80px -36px rgba(8,14,13,.75);animation:floaty 7s ease-in-out infinite}
+.stage .phone img{width:100%;height:100%;object-fit:cover;object-position:top}
+.stage .appic{position:absolute;z-index:2;left:-34px;top:9%;width:clamp(78px,7vw,104px);border-radius:23%;box-shadow:0 24px 40px -18px rgba(8,14,13,.7);animation:floaty2 7s ease-in-out -3.5s infinite}
+@keyframes floaty{50%{transform:translateY(-12px)}}
+@keyframes floaty2{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(-8deg) translateY(10px)}}
+@media(max-width:820px){.hero2 .wrap{grid-template-columns:1fr;min-height:0;gap:40px}.stage{width:min(62%,250px)}.stage .appic{left:-22px;width:72px}}
+@media(prefers-reduced-motion:reduce){.stage .phone,.stage .appic{animation:none}}
+
+/* ===== brief ===== */
+.brief-grid{display:grid;grid-template-columns:1.65fr 1fr;gap:clamp(24px,4vw,64px);align-items:stretch}
+.bq{font-family:var(--hand);font-weight:500;font-size-adjust:.5;font-size:clamp(40px,5vw,72px);line-height:1;margin:14px 0 clamp(22px,3vw,34px)}
+.bq em{font-style:normal;color:var(--sand)}
+.bq span{display:block;color:var(--ink);font-size:.62em;margin-top:.25em}
+.goalcards{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:12px;counter-reset:g;margin:0;padding:0}
+.goalcards li{counter-increment:g;display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:18px;padding:16px 18px;background:color-mix(in srgb,var(--ink) 8%,transparent);font-size:clamp(14.5px,1.1vw,16px);line-height:1.35}
+.goalcards li::before{content:counter(g,decimal-leading-zero);flex:none;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--sand);padding-top:3px}
+.brief-nums{display:flex;flex-direction:column;justify-content:center;border-left:1px solid var(--line)}
+.brief-nums .num{border-left:0;padding:clamp(18px,2.4vw,30px) clamp(18px,2.4vw,32px)}
+.brief-nums .num + .num{border-top:1px solid var(--line)}
+.num b small{font-size:.38em;margin-left:.12em;letter-spacing:.02em}
+@media(max-width:860px){.brief-grid{grid-template-columns:1fr}.brief-nums{flex-direction:row;border-left:0;border-top:1px solid var(--line)}.brief-nums .num{flex:1}.brief-nums .num + .num{border-top:0;border-left:1px solid var(--line)}}
+@media(max-width:560px){.goalcards{grid-template-columns:1fr}}
+.eyebrow{display:block;margin-bottom:12px;color:var(--sand)}
+
+/* balance: shorter before/after in the problem section */
+.saved .grid div{aspect-ratio:1}
+.saved .grid div:nth-child(n+7){display:none}
+.minimap{aspect-ratio:1}
+.lost{max-width:1040px;margin-left:auto;margin-right:auto}
 </style>
 </head>
 <body>
@@ -518,45 +555,55 @@ section[id]{scroll-margin-top:60px}
 </header>
 
 <nav class="snav" aria-label="Sections">
-  <ul class="snav-dots" aria-hidden="true"><li><a href="index.html#work" tabindex="-1"><span class="bk" style="width:auto;height:auto;opacity:1;background:none;border-radius:0">←</span></a></li><li><a href="#why" tabindex="-1" style="--d:150ms"><span></span></a></li><li><a href="#hard" tabindex="-1" style="--d:210ms"><span></span></a></li><li><a href="#free" tabindex="-1" style="--d:270ms"><span></span></a></li><li><a href="#decisions" tabindex="-1" style="--d:330ms"><span></span></a></li><li><a href="#pick" tabindex="-1" style="--d:390ms"><span></span></a></li><li><a href="#fun" tabindex="-1" style="--d:450ms"><span></span></a></li><li><a href="#themes" tabindex="-1" style="--d:510ms"><span></span></a></li><li><a href="#link" tabindex="-1" style="--d:570ms"><span></span></a></li><li><a href="#android" tabindex="-1" style="--d:630ms"><span></span></a></li><li><a href="#timeline" tabindex="-1" style="--d:690ms"><span></span></a></li><li><a href="#stack" tabindex="-1" style="--d:750ms"><span></span></a></li></ul>
-  <ul class="snav-labels"><li><a class="back" href="index.html#work" style="--d:0ms">← Back to work</a></li><li><a href="#why" style="--d:30ms">Why</a></li><li><a href="#hard" style="--d:60ms">The hard part</a></li><li><a href="#free" style="--d:90ms">Free by design</a></li><li><a href="#decisions" style="--d:120ms">Decisions</a></li><li><a href="#pick" style="--d:150ms">Pick a Spot</a></li><li><a href="#fun" style="--d:180ms">Fun on purpose</a></li><li><a href="#themes" style="--d:210ms">Color themes</a></li><li><a href="#link" style="--d:240ms">A link, not an app</a></li><li><a href="#android" style="--d:270ms">Why no Android</a></li><li><a href="#timeline" style="--d:300ms">Timeline</a></li><li><a href="#stack" style="--d:330ms">Stack</a></li></ul>
+  <ul class="snav-dots" aria-hidden="true"><li><a href="index.html#work" tabindex="-1"><span class="bk" style="width:auto;height:auto;opacity:1;background:none;border-radius:0">←</span></a></li><li><a href="#brief" tabindex="-1" style="--d:150ms"><span></span></a></li><li><a href="#why" tabindex="-1" style="--d:200ms"><span></span></a></li><li><a href="#hard" tabindex="-1" style="--d:250ms"><span></span></a></li><li><a href="#free" tabindex="-1" style="--d:300ms"><span></span></a></li><li><a href="#android" tabindex="-1" style="--d:350ms"><span></span></a></li><li><a href="#decisions" tabindex="-1" style="--d:400ms"><span></span></a></li><li><a href="#link" tabindex="-1" style="--d:450ms"><span></span></a></li><li><a href="#fun" tabindex="-1" style="--d:500ms"><span></span></a></li><li><a href="#themes" tabindex="-1" style="--d:550ms"><span></span></a></li><li><a href="#timeline" tabindex="-1" style="--d:600ms"><span></span></a></li><li><a href="#stack" tabindex="-1" style="--d:650ms"><span></span></a></li></ul>
+  <ul class="snav-labels"><li><a class="back" href="index.html#work" style="--d:0ms">← Back to work</a></li><li><a href="#brief" style="--d:25ms">The brief</a></li><li><a href="#why" style="--d:50ms">The problem</a></li><li><a href="#hard" style="--d:75ms">Accurate</a></li><li><a href="#free" style="--d:100ms">Free by design</a></li><li><a href="#android" style="--d:125ms">Why no Android</a></li><li><a href="#decisions" style="--d:150ms">Trade-offs</a></li><li><a href="#link" style="--d:175ms">A link, not an app</a></li><li><a href="#fun" style="--d:200ms">Fun on purpose</a></li><li><a href="#themes" style="--d:225ms">Color themes</a></li><li><a href="#timeline" style="--d:250ms">Timeline</a></li><li><a href="#stack" style="--d:275ms">Stack</a></li></ul>
 </nav>
 
 <main>
   <!-- HERO -->
-  <section class="hero">
-    <div class="wrap hero-grid">
+  <section class="hero2">
+    <div class="wrap">
       <div class="rv">
-        <img class="hero-icon" src="images/pinthereel-icon.jpg" alt="Map the Reel app icon">
         <span class="label">Case study · 2026 · iPhone + web</span>
         <h1>Map the<br>Reel</h1>
         <p class="tag">Every place from every reel, on your map.</p>
-        <p class="bigq"><span class="label">The question</span><em>Accurate.</em> <em>Free.</em> <em>Effortless.</em> Can we have all three?</p>
-        <span class="label goals-lbl">Goals</span><ul class="goals"><li>Turn any saved reel into real places on your own map</li><li>Stay free for everyone — the AI runs on the phone</li><li>Be right: every pin verified, nothing pinned without you</li><li>Make picking a spot with friends fun — no app needed to vote</li></ul>
         <div class="stores">
           <span class="store apple soon"><b><svg viewBox="3 3 18 18" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M13.1 5.2 5.6 18.1M10.9 5.2l7.3 12.6M4.9 14h9.4M16.4 14h2.7"/></svg></b><div><small>In review</small><span>App Store</span></div><i></i></span>
           <a class="store web" href="https://mapthereel.com" target="_blank" rel="noopener"><b><svg viewBox="0 0 24 24" fill="none" stroke="#14211f" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18"/></svg></b><div><small>Visit</small><span>mapthereel.com</span></div></a>
         </div>
       </div>
-      <div class="fan rv" aria-hidden="true">
-        <img src="images/mtr/store-03-worth-the-trip.jpg" alt="">
-        <img src="images/mtr/store-02-every-place.jpg" alt="">
-        <img src="images/mtr/store-05-check-it.jpg" alt="">
+      <div class="stage rv" aria-hidden="true">
+        <span class="blob" style="background:radial-gradient(circle at 30% 30%,#4fc3bf,transparent 60%),radial-gradient(circle at 75% 70%,#f4a3b5,transparent 55%),radial-gradient(circle at 60% 20%,#f8d65a,transparent 50%)"></span>
+        <div class="phone"><img src="images/pinthereel-shot.jpg?v=4" alt=""></div>
+        <img class="appic" src="images/pinthereel-icon.jpg" alt="">
       </div>
     </div>
   </section>
 
-  <div class="wrap">
-    <div class="nums rv">
-      <div class="num fast"><b>3<small>days</small></b><span>first prototype → App Store review</span></div>
-      <div class="num"><b>14<small style="font-size:.38em;margin-left:.12em">builds</small></b><span>to App Store review</span></div>
+  <!-- BRIEF -->
+  <section class="band" id="brief">
+    <div class="wrap brief-grid">
+      <div>
+        <span class="label eyebrow rv">The brief</span>
+        <p class="bq rv"><em>Accurate. Free. Effortless.</em><span>Can we have all three?</span></p>
+        <ol class="goalcards">
+          <li class="rv">Turn any saved reel into real places on your own map</li>
+          <li class="rv">Stay free for everyone — the AI runs on the phone</li>
+          <li class="rv">Be right: every pin verified, nothing pinned without you</li>
+          <li class="rv">Make picking a spot with friends fun — no app needed to vote</li>
+        </ol>
+      </div>
+      <div class="brief-nums rv">
+        <div class="num fast"><b>3<small>days</small></b><span>first prototype → App Store review</span></div>
+        <div class="num"><b>14<small>builds</small></b><span>to App Store review</span></div>
+      </div>
     </div>
-  </div>
+  </section>
 
   <!-- STORY -->
   <section id="why">
     <div class="wrap">
-      <span class="label">01 — Why</span>
+      <span class="label eyebrow">01 — The problem</span>
       <p class="quote rv" style="margin-top:18px">“You saved that taco reel three weeks ago. <em>You'll never find it again.</em>”</p>
       <p class="label quote-by rv">Saved folders are where good restaurant tips go to die</p>
 
@@ -601,6 +648,7 @@ section[id]{scroll-margin-top:60px}
   <!-- HARD PART -->
   <section class="band" id="hard">
     <div class="wrap">
+      <span class="label eyebrow rv">02 — Accurate</span>
       <div class="sh"><h2 class="rv">The hard part was <em>being right</em></h2><p class="rv">Reels hide their places everywhere. Free tools, stacked, dig until one turns up — then prove it.</p></div>
       <div class="cases two">
         <div class="case rv"><span class="lbl">Trap 1</span><p class="said">A Vancouver food reel, no city in the caption</p>
@@ -661,6 +709,7 @@ section[id]{scroll-margin-top:60px}
   <!-- FREE BY DESIGN -->
   <section id="free">
     <div class="wrap">
+      <span class="label eyebrow rv">03 — Free</span>
       <div class="sh"><h2 class="rv">Free <em>by design</em></h2><p class="rv">No subscription, no per-reel bill. The pattern: cheapest signal first, stop the moment a place is found.</p></div>
       <div class="fall">
         <div class="tiers">
@@ -683,9 +732,33 @@ section[id]{scroll-margin-top:60px}
     </div>
   </section>
 
-  <!-- DECISIONS -->
-  <section class="band" id="decisions">
+  <!-- ANDROID -->
+  <section class="band" id="android">
     <div class="wrap">
+      <span class="label eyebrow rv">03 — Free</span>
+      <div class="sh"><h2 class="rv">Why no <em>Android</em> app</h2><p class="rv">Free depends on the phone doing the AI. Today, only one platform gives that away.</p></div>
+      <div class="andro">
+        <div class="cmp rv">
+          <div>The job</div><div>iPhone</div><div>Android equivalent</div>
+          <div class="what">Read place names</div><div class="ok">Apple Intelligence, on device</div><div class="cost">Cloud AI per reel</div>
+          <div class="what">Hear the video</div><div class="ok">Speech, on device</div><div class="cost">Cloud speech-to-text</div>
+          <div class="what">Read on-screen text</div><div class="ok">Vision, on device</div><div class="ok">On device too</div>
+          <div class="what">Check every pin</div><div class="ok">Apple Maps + Look Around</div><div class="cost">Paid maps API</div>
+          <div class="what">Grab from any app</div><div class="ok">Share extension</div><div class="ok">Share intent</div>
+        </div>
+        <div class="verdict2 rv">
+          <p class="rule">Free on iPhone. <em>A bill</em> on Android.</p>
+          <p>Every reel would cost money to read. That breaks the one promise the app makes, so Android waits until it can be free too.</p>
+          <div class="stillv">🤖 Android friends still vote — the web link works in any browser.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DECISIONS -->
+  <section id="decisions">
+    <div class="wrap">
+      <span class="label eyebrow rv">04 — Trade-offs</span>
       <div class="sh"><h2 class="rv">Six calls that <em>shaped it</em></h2><p class="rv">Each one trades a little cleverness for trust.</p></div>
       <div class="dgrid">
         <article class="dc rv">
@@ -732,35 +805,43 @@ section[id]{scroll-margin-top:60px}
     </div>
   </section>
 
-  <!-- PICK A SPOT -->
-  <section id="pick">
+  <!-- WEB VOTE DECISION -->
+  <section class="band" id="link">
     <div class="wrap">
-      <div class="sh"><h2 class="rv">Where are we <em>eating?</em></h2><p class="rv">The question every saved reel eventually becomes.</p></div>
-      <div class="vote">
-        <div class="vcard rv" aria-label="Example vote: three saved places with live results">
-          <span class="label" style="color:#4a5680">Pick a Spot · 4 friends voted</span>
-          <h4>Friday dinner</h4>
-          <p class="who">From your map · votes close in 3 days</p>
-          <div class="opt o1 win"><i></i><span>🌮 La Taqueria</span><small>3</small></div>
-          <div class="opt o2"><i></i><span>🍜 Ramen spot</span><small>2</small></div>
-          <div class="opt o3"><i></i><span>🍷 Rooftop bar</span><small>1</small></div>
-          <div class="on">It's on · Fri 7:30 PM</div>
-        </div>
-        <div class="vfacts">
-          <div class="vf rv"><b>2–6</b><span>saved places per vote</span></div>
-          <div class="vf rv"><b>0</b><span>apps or sign-ups for friends</span></div>
-          <div class="vf rv"><b>Live</b><span>votes stream in as they land</span></div>
-          <div class="vf rv"><b>3 days</b><span>then the vote deletes itself</span></div>
-        </div>
+      <span class="label eyebrow rv">05 — Effortless</span>
+      <div class="sh"><h2 class="rv">A link, <em>not an app</em></h2><p class="rv">Only the host needs Map the Reel. Everyone else votes from a web page.</p></div>
+      <div class="opts">
+        <div class="optc rv"><span class="verdict no">Rejected</span><div class="vis2">📲</div><h3>Make friends install</h3>
+          <ul><li class="x"><b>✕</b>Nobody installs an app to vote on dinner</li><li class="x"><b>✕</b>Leaves out Android friends</li><li class="x"><b>✕</b>Needs accounts to match votes</li></ul></div>
+        <div class="optc rv"><span class="verdict no">Rejected</span><div class="vis2">💬</div><h3>Group-chat poll</h3>
+          <ul><li class="x"><b>✕</b>No map, no photos, no times</li><li class="x"><b>✕</b>Different in every chat app</li><li class="x"><b>✕</b>Result never reaches the app</li></ul></div>
+        <div class="optc pick rv"><span class="verdict yes">Chosen</span><div class="vis2"><span class="devices">📱💻🤖</span></div><h3>A web link</h3>
+          <ul><li class="v"><b>✓</b>Opens in any browser, any phone</li><li class="v"><b>✓</b>No install, no sign-in</li><li class="v"><b>✓</b>Votes flow back to the host's app live</li></ul></div>
+      </div>
+      <div class="flow">
+        <div class="fs rv"><span class="who">Host · iPhone app</span><div class="em">📍</div><b>Pick 2–6 places</b><p>From saved pins, plus a few times.</p></div>
+        <div class="fs rv"><span class="who">Host</span><div class="em">🔗</div><b>Share a link</b><p>Any chat. The link is the whole invite.</p></div>
+        <div class="fs web rv"><span class="who">Friends · any browser</span><div class="em">🗳️</div><b>Vote</b><p>Name, pick, done. No app.</p></div>
+        <div class="fs rv"><span class="who">Host · iPhone app</span><div class="em">🏆</div><b>Pick the winner</b><p>Watches votes live, sets place + time.</p></div>
+        <div class="fs web rv"><span class="who">Everyone</span><div class="em">📅</div><b>It's on</b><p>Calendar invite + directions. Gone in 3 days.</p></div>
+      </div>
+      <div class="logic">
+        <div class="lg rv"><span class="t">Identity</span><p class="q">No accounts — so how are votes counted once?</p><p class="a">A name is required. The same name from another browser asks “Is that you?” before replacing the vote.</p></div>
+        <div class="lg rv"><span class="t">Control</span><p class="q">Who gets to decide?</p><p class="a">Each vote has a private host key. Only the host's app can pick the winner.</p></div>
+        <div class="lg rv"><span class="t">Closure</span><p class="q">When is it over?</p><p class="a">Voting closes the moment the plan is set. No late votes reshuffling dinner.</p></div>
+        <div class="lg rv"><span class="t">Follow-through</span><p class="q">How do people actually show up?</p><p class="a">One tap to add it to Apple or Google Calendar, and directions in the right maps app.</p></div>
+        <div class="lg rv"><span class="t">Live</span><p class="q">Does the host have to refresh?</p><p class="a">Votes stream in on their own while the host watches.</p></div>
+        <div class="lg rv"><span class="t">Privacy</span><p class="q">Where does the vote live?</p><p class="a">On a tiny server for 3 days, then it deletes itself.</p></div>
+        <div class="lg rv"><span class="t">Every browser</span><p class="q">Will it look right everywhere?</p><p class="a">Solid cards instead of blur effects that some browsers draw badly.</p></div>
+        <div class="lg rv"><span class="t">Accessibility</span><p class="q">Confetti for everyone?</p><p class="a">Celebration plays for the plan, skipped when Reduce Motion is on.</p></div>
       </div>
     </div>
   </section>
 
-
-
   <!-- FUN -->
-  <section class="band" id="fun">
+  <section id="fun">
     <div class="wrap">
+      <span class="label eyebrow rv">05 — Effortless</span>
       <div class="sh"><h2 class="rv">Deciding dinner <em>should be fun</em></h2><p class="rv">The vote is a tiny game. Every step gives you a little reward.</p></div>
       <div class="fun">
         <div class="vphone rv" id="vphone" aria-label="Animated vote page: glowing while voting, green once voted, confetti when the plan is set">
@@ -794,8 +875,9 @@ section[id]{scroll-margin-top:60px}
   </section>
 
   <!-- THEMES -->
-  <section id="themes">
+  <section class="band" id="themes">
     <div class="wrap">
+      <span class="label eyebrow rv">05 — Effortless</span>
       <p class="manifesto2 rv">We don't need more <s>white, boring</s> apps. <em>Crazy on purpose.</em></p>
       <div class="themes">
         <div class="th rv" style="background:#EFD993;color:#1F3A36"><span class="nm">Butter</span><span class="insp">Butter + raspberry</span>
@@ -815,63 +897,10 @@ section[id]{scroll-margin-top:60px}
     </div>
   </section>
 
-  <!-- WEB VOTE DECISION -->
-  <section class="band" id="link">
-    <div class="wrap">
-      <div class="sh"><h2 class="rv">A link, <em>not an app</em></h2><p class="rv">Only the host needs Map the Reel. Everyone else votes from a web page.</p></div>
-      <div class="opts">
-        <div class="optc rv"><span class="verdict no">Rejected</span><div class="vis2">📲</div><h3>Make friends install</h3>
-          <ul><li class="x"><b>✕</b>Nobody installs an app to vote on dinner</li><li class="x"><b>✕</b>Leaves out Android friends</li><li class="x"><b>✕</b>Needs accounts to match votes</li></ul></div>
-        <div class="optc rv"><span class="verdict no">Rejected</span><div class="vis2">💬</div><h3>Group-chat poll</h3>
-          <ul><li class="x"><b>✕</b>No map, no photos, no times</li><li class="x"><b>✕</b>Different in every chat app</li><li class="x"><b>✕</b>Result never reaches the app</li></ul></div>
-        <div class="optc pick rv"><span class="verdict yes">Chosen</span><div class="vis2"><span class="devices">📱💻🤖</span></div><h3>A web link</h3>
-          <ul><li class="v"><b>✓</b>Opens in any browser, any phone</li><li class="v"><b>✓</b>No install, no sign-in</li><li class="v"><b>✓</b>Votes flow back to the host's app live</li></ul></div>
-      </div>
-      <div class="flow">
-        <div class="fs rv"><span class="who">Host · iPhone app</span><div class="em">📍</div><b>Pick 2–6 places</b><p>From saved pins, plus a few times.</p></div>
-        <div class="fs rv"><span class="who">Host</span><div class="em">🔗</div><b>Share a link</b><p>Any chat. The link is the whole invite.</p></div>
-        <div class="fs web rv"><span class="who">Friends · any browser</span><div class="em">🗳️</div><b>Vote</b><p>Name, pick, done. No app.</p></div>
-        <div class="fs rv"><span class="who">Host · iPhone app</span><div class="em">🏆</div><b>Pick the winner</b><p>Watches votes live, sets place + time.</p></div>
-        <div class="fs web rv"><span class="who">Everyone</span><div class="em">📅</div><b>It's on</b><p>Calendar invite + directions. Gone in 3 days.</p></div>
-      </div>
-      <div class="logic">
-        <div class="lg rv"><span class="t">Identity</span><p class="q">No accounts — so how are votes counted once?</p><p class="a">A name is required. The same name from another browser asks “Is that you?” before replacing the vote.</p></div>
-        <div class="lg rv"><span class="t">Control</span><p class="q">Who gets to decide?</p><p class="a">Each vote has a private host key. Only the host's app can pick the winner.</p></div>
-        <div class="lg rv"><span class="t">Closure</span><p class="q">When is it over?</p><p class="a">Voting closes the moment the plan is set. No late votes reshuffling dinner.</p></div>
-        <div class="lg rv"><span class="t">Follow-through</span><p class="q">How do people actually show up?</p><p class="a">One tap to add it to Apple or Google Calendar, and directions in the right maps app.</p></div>
-        <div class="lg rv"><span class="t">Live</span><p class="q">Does the host have to refresh?</p><p class="a">Votes stream in on their own while the host watches.</p></div>
-        <div class="lg rv"><span class="t">Privacy</span><p class="q">Where does the vote live?</p><p class="a">On a tiny server for 3 days, then it deletes itself.</p></div>
-        <div class="lg rv"><span class="t">Every browser</span><p class="q">Will it look right everywhere?</p><p class="a">Solid cards instead of blur effects that some browsers draw badly.</p></div>
-        <div class="lg rv"><span class="t">Accessibility</span><p class="q">Confetti for everyone?</p><p class="a">Celebration plays for the plan, skipped when Reduce Motion is on.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ANDROID -->
-  <section id="android">
-    <div class="wrap">
-      <div class="sh"><h2 class="rv">Why no <em>Android</em> app</h2><p class="rv">Free depends on the phone doing the AI. Today, only one platform gives that away.</p></div>
-      <div class="andro">
-        <div class="cmp rv">
-          <div>The job</div><div>iPhone</div><div>Android equivalent</div>
-          <div class="what">Read place names</div><div class="ok">Apple Intelligence, on device</div><div class="cost">Cloud AI per reel</div>
-          <div class="what">Hear the video</div><div class="ok">Speech, on device</div><div class="cost">Cloud speech-to-text</div>
-          <div class="what">Read on-screen text</div><div class="ok">Vision, on device</div><div class="ok">On device too</div>
-          <div class="what">Check every pin</div><div class="ok">Apple Maps + Look Around</div><div class="cost">Paid maps API</div>
-          <div class="what">Grab from any app</div><div class="ok">Share extension</div><div class="ok">Share intent</div>
-        </div>
-        <div class="verdict2 rv">
-          <p class="rule">Free on iPhone. <em>A bill</em> on Android.</p>
-          <p>Every reel would cost money to read. That breaks the one promise the app makes, so Android waits until it can be free too.</p>
-          <div class="stillv">🤖 Android friends still vote — the web link works in any browser.</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- TIMELINE -->
-  <section class="band" id="timeline">
+  <section id="timeline">
     <div class="wrap">
+      <span class="label eyebrow rv">06 — The build</span>
       <div class="sh"><h2 class="rv">From a Mac to <em>the App Store</em></h2><p class="rv">Web prototype in the morning, native by the afternoon, submitted the next day.</p></div>
       <div class="track" id="track">
         <div class="ms"><time>Nov 13</time><b>Web prototype</b><p>Node server + Leaflet map on a Mac, Claude reading captions.</p></div>
@@ -886,8 +915,9 @@ section[id]{scroll-margin-top:60px}
   </section>
 
   <!-- STACK -->
-  <section id="stack">
+  <section class="band" id="stack">
     <div class="wrap">
+      <span class="label eyebrow rv">06 — The build</span>
       <div class="sh"><h2 class="rv">Native app, <em>tiny server</em></h2><p class="rv">The phone does the thinking. The server only searches and holds votes.</p></div>
       <div class="bar rv" id="bar"><div class="sw2">Swift · 80%</div><div class="js">JS · 20%</div></div>
       <div class="stack-cols">
@@ -899,7 +929,7 @@ section[id]{scroll-margin-top:60px}
   </section>
 
   <!-- END -->
-  <section class="band end">
+  <section class="end">
     <div class="wrap">
       <p class="quote rv">Your saved folder can <em>finally retire.</em></p>
       <div class="stores rv">
